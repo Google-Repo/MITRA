@@ -1,0 +1,82 @@
+/* Full screen center */
+.login-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #f8f9fa;
+  padding: 20px; /* mobile spacing */
+}
+
+/* Logo */
+.logo {
+  width: 1258px; /* ❌ 1258px hata diya */
+  max-width: 80%; /* responsive */
+  height: auto;
+  margin-bottom: 40px;
+}
+
+/* Buttons container */
+.login-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 300px;
+}
+
+/* Buttons */
+.login-buttons button {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  background: #0f172a;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.login-buttons button:hover {
+  background: #1e293b;
+  transform: scale(1.05);
+}
+
+---
+
+/* 📱 Tablet */
+@media (max-width: 768px) {
+  .logo {
+    width: 220px;
+  }
+
+  .login-buttons {
+    max-width: 250px;
+  }
+
+  .login-buttons button {
+    font-size: 15px;
+  }
+}
+
+---
+
+/* 📱 Mobile */
+@media (max-width: 480px) {
+  .logo {
+    width: 180px;
+    margin-bottom: 30px;
+  }
+
+  .login-buttons {
+    max-width: 200px;
+    gap: 15px;
+  }
+
+  .login-buttons button {
+    font-size: 14px;
+    padding: 10px;
+  }
+}

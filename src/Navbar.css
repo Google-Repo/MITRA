@@ -3,6 +3,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  
 }
 
 /* Navbar Container */
@@ -11,11 +12,12 @@
   justify-content: space-between;
   align-items: center;
   padding: 15px 40px;
-  background: #0f172a; /* dark blue */
+  background: #ffffff; /* dark blue */
   color: #fff;
   position: sticky;
   top: 0;
   z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 /* Logo */
@@ -24,6 +26,7 @@
   font-weight: bold;
   letter-spacing: 1px;
   cursor: pointer;
+  
 }
 
 /* Nav Links */
@@ -31,6 +34,8 @@
   display: flex;
   list-style: none;
   gap: 30px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
 }
 
 .nav-links li {
@@ -41,7 +46,7 @@
 /* Links style */
 .nav-links li a {
   text-decoration: none;
-  color: #e2e8f0;
+  color: #6b6b6b;
   font-size: 16px;
   transition: 0.3s ease;
 }
