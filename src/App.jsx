@@ -1,25 +1,24 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import Navbar from "../Components/Navbar";
 import Student from "../pages/Student";
 import Teacher from "../pages/Teacher";
 import Admin from "../pages/Admin";
-import Login from "../pages/login";
+import Login from "../pages/StartLogin";
 import ProtectedRoute from "../Components/ProtectedRoute";
+import StudentLogin from "../LoginPages/StudentLogin";
 
 function Layout() {
-  const location = useLocation();
-
-  
-  const hideNavbar = location.pathname === "/";
-
   return (
     <>
-      {!hideNavbar && <Navbar />} {/* 🔥 condition */}
-
       <Routes>
+
+        {/* 🔓 Start Page */}
         <Route path="/" element={<Login />} />
 
+        {/* 🔐 Student Login Page */}
+        <Route path="/student-login" element={<StudentLogin />} />
+
+        {/* 🔐 Protected Student Dashboard */}
         <Route
           path="/student"
           element={
@@ -29,6 +28,7 @@ function Layout() {
           }
         />
 
+        {/* 🔐 Teacher */}
         <Route
           path="/teacher"
           element={
@@ -38,6 +38,7 @@ function Layout() {
           }
         />
 
+        {/* 🔐 Admin */}
         <Route
           path="/admin"
           element={
@@ -46,6 +47,7 @@ function Layout() {
             </ProtectedRoute>
           }
         />
+
       </Routes>
     </>
   );

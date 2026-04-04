@@ -15,11 +15,11 @@ function Navbar() {
       </div>
 
       <ul className="nav-links">
-        <li><Link to="/">HOME</Link></li>
+        <li><Link to="/student">HOME</Link></li>
         {/* <li><Link to="/student">STUDENT</Link></li>
         <li><Link to="/teacher">TEACHER</Link></li>
         <li><Link to="/admin">ADMIN</Link></li> */}
-        <li><Link to="/">LOGIN</Link></li>
+        <li><Link to="/login">LOGIN</Link></li>
       </ul>
     </nav>
   );

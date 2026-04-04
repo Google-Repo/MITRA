@@ -1,0 +1,129 @@
+/* =========================
+   FULL PAGE
+========================= */
+.main {
+  height: 100vh;
+  background-color: #eeeeee;
+  position: relative;
+  overflow: hidden;
+}
+
+/* =========================
+   LOGO POSITION
+========================= */
+.logo-wrapper {
+  position: absolute;
+  top: 28%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Logo Responsive Size */
+.logo-img {
+  width: 60vw;
+  max-width: 1280px;
+}
+
+/* =========================
+   BUTTONS (DESKTOP)
+========================= */
+.buttons {
+  position: absolute;
+  top: 56%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  gap: 80px;
+}
+
+/* Button Styling */
+.login-btn {
+  padding: 14px 60px;
+  border-radius: 35px;
+  border: none;
+  background-color: #6f8fc3;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+/* Hover */
+.login-btn:hover {
+  background-color: #5c79a8;
+  transform: translateY(-3px);
+}
+
+/* =========================
+   TABLET (<= 1024px)
+========================= */
+@media (max-width: 1024px) {
+  .logo-wrapper {
+    top: 40%;
+  }
+
+  .logo-img {
+    width: 75vw;
+  }
+
+  .buttons {
+    gap: 40px;
+    top: 60%;
+  }
+
+  .login-btn {
+    padding: 12px 40px;
+    font-size: 20px;
+  }
+}
+
+/* =========================
+   MOBILE (<= 768px)
+========================= */
+@media (max-width: 768px) {
+  .logo-wrapper {
+    top: 22%;
+  }
+
+  .logo-img {
+    width: 80vw;
+  }
+
+  .buttons {
+    flex-direction: column;   /* ✅ vertical buttons */
+    align-items: center;      /* ✅ center align */
+    gap: 20px;
+    top: 60%;
+  }
+
+  .login-btn {
+    width: 220px;
+    padding: 12px 0;
+    font-size: 13px;
+  }
+}
+
+/* =========================
+   SMALL MOBILE (<= 480px)
+========================= */
+@media (max-width: 480px) {
+  .logo-wrapper {
+    top: 30%;
+  }
+
+  .logo-img {
+    width: 90vw;
+  }
+
+  .buttons {
+    top: 56%;
+  }
+
+  .login-btn {
+    width: 180px;
+    font-size: 12px;
+  }
+}
