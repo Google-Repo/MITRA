@@ -3,41 +3,38 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  
 }
 
-/* Navbar Container */
+/* 🔥 Navbar Container */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 15px 40px;
-  background: #ffffff; /* dark blue */
-  color: #fff;
+  background: #ffffff;
+  color: #0f172a; /* ✅ FIX: text visible */
   position: sticky;
   top: 0;
   z-index: 1000;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Logo */
-.logo {
-  font-size: 24px;
-  font-weight: bold;
-  letter-spacing: 1px;
-  cursor: pointer;
-  
+/* 🔥 Logo */
+.logo img {
+  display: block;
 }
 
-/* Nav Links */
+/* 🔥 Nav Links */
 .nav-links {
   display: flex;
   list-style: none;
   gap: 30px;
   font-family: 'Montserrat', sans-serif;
   font-weight: bold;
+  align-items: center; /* ✅ alignment fix */
 }
 
+/* List item */
 .nav-links li {
   position: relative;
   cursor: pointer;
@@ -51,7 +48,7 @@
   transition: 0.3s ease;
 }
 
-/* Hover effect */
+/* Hover */
 .nav-links li a:hover {
   color: #38bdf8;
 }
@@ -72,21 +69,33 @@
   width: 100%;
 }
 
-/* Button */
-.btn {
-  padding: 8px 18px;
+/* 🔥 NEW: Right Side (Profile + Logout) */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Profile text */
+.profile {
+  font-size: 14px;
+  color: #333;
+}
+
+/* 🔥 Logout Button */
+.logout-btn {
+  padding: 6px 14px;
+  margin-bottom: 20px;
   border: none;
   border-radius: 6px;
-  background: #38bdf8;
-  color: #0f172a;
-  font-weight: 500;
+  background: #ef4444;
+  color: white;
   cursor: pointer;
   transition: 0.3s;
 }
 
-.btn:hover {
-  background: #0ea5e9;
-  color: #fff;
+.logout-btn:hover {
+  background: #dc2626;
 }
 
 /* 🔥 Responsive (Mobile) */

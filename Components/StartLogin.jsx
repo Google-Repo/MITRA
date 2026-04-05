@@ -7,7 +7,6 @@ const StartLogin = () => {
 
   return (
     <div className="main">
-      
       {/* Logo */}
       <div className="logo-wrapper">
         <img
@@ -19,31 +18,25 @@ const StartLogin = () => {
 
       {/* Buttons */}
       <div className="buttons">
-
         {/* ✅ FIXED */}
-        <button 
-          className="login-btn" 
+        <button
+          className="login-btn"
           onClick={() => navigate("/student-login")}
         >
           STUDENT LOGIN
         </button>
 
-        <button 
-          className="login-btn" 
-          onClick={() => navigate("/teacher")}
+        <button
+          className="login-btn"
+          onClick={() => navigate("/teacher-login")}
         >
           TEACHER LOGIN
         </button>
 
-        <button 
-          className="login-btn" 
-          onClick={() => navigate("/admin")}
-        >
+        <button className="login-btn" onClick={() => navigate("/admin-login")}>
           ADMIN LOGIN
         </button>
-
       </div>
-
     </div>
   );
 };

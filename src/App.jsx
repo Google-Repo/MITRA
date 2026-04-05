@@ -3,9 +3,11 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Student from "../pages/Student";
 import Teacher from "../pages/Teacher";
 import Admin from "../pages/Admin";
-import Login from "../pages/StartLogin";
+import Login from "../Components/StartLogin";
 import ProtectedRoute from "../Components/ProtectedRoute";
 import StudentLogin from "../LoginPages/StudentLogin";
+import TeacherLogin from "../LoginPages/TeacherLogin";
+import AdminLogin from "../LoginPages/AdminLogin";
 
 function Layout() {
   return (
@@ -47,6 +49,9 @@ function Layout() {
             </ProtectedRoute>
           }
         />
+
+        <Route path="/teacher-login" element={<TeacherLogin />} />
+        <Route path="/admin-login" element={<AdminLogin />} />
 
       </Routes>
     </>
