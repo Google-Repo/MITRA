@@ -1,0 +1,450 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: #f7f9fc;
+  color: #333;
+}
+
+/* ======== LAYOUT ======== */
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ======== HEADER ======== */
+.dash-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #1a0f3d;
+  color: white;
+  padding: 16px 32px;
+}
+
+.school-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.school-logo {
+  width: 40px;
+  height: 40px;
+  background: #6f59f6;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 20px;
+}
+
+.school-name {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.school-desc {
+  margin: 0;
+  font-size: 12px;
+  color: #9c93cc;
+}
+
+.header-icons {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.icon {
+  font-size: 20px;
+  cursor: pointer;
+  color: #b2a8d6;
+}
+
+.icon:hover {
+  color: white;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: 20px;
+  border-left: 1px solid rgba(255,255,255,0.1);
+  padding-left: 20px;
+}
+
+.user-name {
+  font-size: 14px;
+  color: #d8d4e7;
+}
+
+.user-name strong {
+  color: white;
+  font-weight: 600;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #6366f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+/* ======== MAIN GRID ======== */
+.dash-content {
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.col-left {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.col-right {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ======== CARDS ======== */
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  border: 1px solid #f0f0f0;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #2d3748;
+}
+
+/* ======== QUICK STATS (TOP ROW) ======== */
+.quick-stats-row {
+  display: flex;
+  gap: 16px;
+}
+
+.selector-box, .stat-box {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+}
+
+.selector-box select {
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: #4a5568;
+  width: 100%;
+  outline: none;
+  background: transparent;
+}
+
+.stat-val {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #718096;
+  margin: 0;
+}
+
+.trend-row {
+  display: flex;
+  justify-content: space-between;
+  background: white;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.trend-up { color: #5a67d8; }
+.trend-down { color: #e53e3e; }
+
+/* ======== DONUT CHART SCALES (MOCKED) ======== */
+.donut-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 20px;
+}
+
+.donut-mock {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: conic-gradient(
+    #667eea 0% 15%, 
+    #764ba2 15% 45%, 
+    #00c6ff 45% 65%, 
+    #0072ff 65% 80%, 
+    #f6d365 80% 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.donut-inner {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.donut-val {
+  font-size: 24px;
+  font-weight: 700;
+}
+.donut-lbl {
+  font-size: 12px;
+  color: #a0aec0;
+}
+
+.chart-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.bar-label {
+  width: 60px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.bar-track {
+  flex: 1;
+  height: 8px;
+  background: #edf2f7;
+  border-radius: 4px;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 4px;
+}
+
+/* ======== EXAM RESULTS (VERTICAL BARS) ======== */
+.exam-legend {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  margin-bottom: 24px;
+}
+
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.legend-color { width: 10px; height: 10px; border-radius: 2px; }
+
+.bar-chart-vertical {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 200px;
+  padding-bottom: 30px;
+  border-left: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+  position: relative;
+}
+
+.y-axis {
+  position: absolute;
+  left: -35px;
+  top: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #a0aec0;
+}
+
+.x-group {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  position: relative;
+}
+
+.v-bar {
+  width: 14px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.x-label {
+  position: absolute;
+  bottom: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  color: #718096;
+}
+
+/* ======== RANKING CARDS ======== */
+.grid-2x2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.rank-card {
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rank-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #edf2f7;
+}
+
+.rank-info h4 { margin: 0 0 4px 0; font-size: 14px; color: #2d3748; }
+.rank-stats { display: flex; gap: 12px; font-size: 11px; color: #718096; }
+.rank-stats div { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.rank-stats span { font-weight: 600; color: #1a202c; }
+
+/* ======== STUDENT DETAILS ======== */
+.student-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.s-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px 16px;
+  text-align: center;
+}
+
+.s-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #f7fafc;
+  margin: 0 auto 12px;
+}
+
+.s-name { margin: 0 0 4px; font-size: 14px; font-weight: 600; }
+.s-gender { font-size: 11px; color: #a0aec0; margin-bottom: 16px; }
+
+.s-stats {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #edf2f7;
+  padding-top: 12px;
+  font-size: 11px;
+}
+
+/* ======== RADIAL SCORES ======== */
+.radiuses {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
+}
+
+.radial-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.radial-chart {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.r-inner {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.r-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #4a5568;
+}
+
+@media (max-width: 1024px) {
+  .dash-content {
+    grid-template-columns: 1fr;
+  }
+}
