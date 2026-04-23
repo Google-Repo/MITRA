@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./LoginPages.css";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = () => {
+  const handleLogin = (e) => {
+    e.preventDefault();
     // 🔐 Dummy credentials
     if (email === "admin@gmail.com" && password === "1234") {
       localStorage.setItem("role", "admin");
@@ -17,22 +19,43 @@ const AdminLogin = () => {
   };
 
   return (
-    <div>
-      <h2>Admin Login 🛠️</h2>
+    <div className="login-container">
+      <form className="login-card" onSubmit={handleLogin}>
+        <div className="login-header">
+          <h2 className="login-title">Admin Portal 🛠️</h2>
+          <p className="login-subtitle">Sign in to manage the system</p>
+        </div>
 
-      <input
-        type="email"
-        placeholder="Enter Email"
-        onChange={(e) => setEmail(e.target.value)}
-      />
+        <div className="input-group">
+          <label>Email Address</label>
+          <input
+            type="email"
+            className="login-input"
+            placeholder="admin@gmail.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
 
-      <input
-        type="password"
-        placeholder="Enter Password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
+        <div className="input-group">
+          <label>Password</label>
+          <input
+            type="password"
+            className="login-input"
+            placeholder="Enter password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
 
-      <button onClick={handleLogin}>Login</button>
+        <button type="submit" className="login-btn-submit">Login to Dashboard</button>
+        
+        <div className="back-link" onClick={() => navigate("/")}>
+          ← Back to selection
+        </div>
+      </form>
     </div>
   );
 };
