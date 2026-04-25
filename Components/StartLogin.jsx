@@ -18,24 +18,35 @@ const StartLogin = () => {
 
       {/* Buttons */}
       <div className="buttons">
-        {/* ✅ FIXED */}
-        <button
-          className="login-btn"
-          onClick={() => navigate("/student-login")}
-        >
-          STUDENT LOGIN
-        </button>
+        {/* Student Section */}
+        <div style={{ marginBottom: "20px" }}>
+          <button
+            className="login-btn"
+            onClick={() => navigate("/student-login")}
+          >
+            STUDENT LOGIN
+          </button>
+        </div>
 
-        <button
-          className="login-btn"
-          onClick={() => navigate("/teacher-login")}
-        >
-          TEACHER LOGIN
-        </button>
+        {/* Teacher Section */}
+        <div style={{ marginBottom: "20px" }}>
+          <button
+            className="login-btn"
+            onClick={() => navigate("/teacher-login")}
+          >
+            TEACHER LOGIN
+          </button>
+        </div>
 
-        <button className="login-btn" onClick={() => navigate("/admin-login")}>
-          ADMIN LOGIN
-        </button>
+        {/* Admin Section */}
+        <div>
+          <button
+            className="login-btn"
+            onClick={() => navigate("/admin-login")}
+          >
+            ADMIN LOGIN
+          </button>
+        </div>
       </div>
     </div>
   );

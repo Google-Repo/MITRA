@@ -1,20 +1,38 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./LoginPages.css";
+import axios from "axios";
+
+const API_URL = "http://localhost:5000/api/teachers";
 
 const TeacherLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // 🔐 Dummy credentials
-    if (email === "teacher@gmail.com" && password === "1234") {
+    setError("");
+    setLoading(true);
+
+    try {
+      const response = await axios.post(`${API_URL}/login`, {
+        email,
+        password,
+      });
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.teacher));
       localStorage.setItem("role", "teacher");
       navigate("/teacher");
-    } else {
-      alert("Invalid credentials ❌");
+    } catch (error) {
+      setError(
+        error.response?.data?.error || "Login failed. Please try again.",
+      );
+      console.error("Login failed:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -26,6 +44,14 @@ const TeacherLogin = () => {
           <p className="login-subtitle">Manage your classes and students</p>
         </div>
 
+        {error && (
+          <div
+            style={{ color: "red", marginBottom: "10px", textAlign: "center" }}
+          >
+            {error}
+          </div>
+        )}
+
         <div className="input-group">
           <label>Teacher Email</label>
           <input
@@ -35,6 +61,7 @@ const TeacherLogin = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            disabled={loading}
           />
         </div>
 
@@ -47,11 +74,12 @@ const TeacherLogin = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            disabled={loading}
           />
         </div>
 
-        <button type="submit" className="login-btn-submit">
-          Login to Dashboard
+        <button type="submit" className="login-btn-submit" disabled={loading}>
+          {loading ? "Logging in..." : "Login to Dashboard"}
         </button>
 
         <div className="back-link" onClick={() => navigate("/")}>
