@@ -1,220 +1,176 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "./LoginPages.css";
-import axios from "axios";
-
-const API_URL = "http://localhost:5000/api/teachers";
+import { useNavigate, Link } from "react-router-dom";
 
 const TeacherSignup = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
-    confirmPassword: "",
     employeeId: "",
     department: "",
     subject: "",
   });
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    setError("");
-
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
-
-    if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters");
-      return;
-    }
-
-    setLoading(true);
-
     try {
-      const response = await axios.post(`${API_URL}/signup`, {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-        employeeId: formData.employeeId,
-        department: formData.department,
-        subject: formData.subject,
-      });
-
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.teacher));
-      localStorage.setItem("role", "teacher");
-      navigate("/teacher");
-    } catch (error) {
-      setError(
-        error.response?.data?.error || "Signup failed. Please try again.",
+      const response = await fetch(
+        "http://localhost:5000/api/teachers/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        },
       );
-      console.error("Signup failed:", error);
-    } finally {
-      setLoading(false);
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Save data to localStorage
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("role", "teacher");
+        localStorage.setItem("user", JSON.stringify(data.teacher));
+
+        // Redirect to Teacher Dashboard
+        navigate("/teacher");
+      } else {
+        alert(data.error || "Signup failed");
+      }
+    } catch (error) {
+      console.error("Error during signup:", error);
+      alert("Something went wrong. Please try again.");
     }
   };
 
+  const inputStyle = {
+    padding: "12px",
+    borderRadius: "5px",
+    border: "1px solid #ccc",
+    fontSize: "15px",
+  };
+
   return (
-    <div className="login-container">
-      <form className="login-card" onSubmit={handleSignup}>
-        <div className="login-header">
-          <h2 className="login-title">Teacher Registration 👨‍🏫</h2>
-          <p className="login-subtitle">Create your teacher account</p>
-        </div>
-
-        {error && (
-          <div
-            style={{
-              color: "red",
-              marginBottom: "10px",
-              textAlign: "center",
-              fontSize: "14px",
-            }}
-          >
-            {error}
-          </div>
-        )}
-
-        <div className="input-group">
-          <label>Full Name</label>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "100vh",
+        backgroundColor: "#eeeeee",
+        padding: "20px 0",
+      }}
+    >
+      <div
+        style={{
+          padding: "40px",
+          backgroundColor: "white",
+          borderRadius: "10px",
+          boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+          width: "350px",
+        }}
+      >
+        <h2
+          style={{ textAlign: "center", marginBottom: "20px", color: "#333" }}
+        >
+          Teacher Signup
+        </h2>
+        <form
+          onSubmit={handleSignup}
+          style={{ display: "flex", flexDirection: "column", gap: "15px" }}
+        >
           <input
             type="text"
             name="name"
-            className="login-input"
-            placeholder="Mr. Smith"
+            placeholder="Full Name"
             value={formData.name}
             onChange={handleChange}
             required
-            disabled={loading}
+            style={inputStyle}
           />
-        </div>
-
-        <div className="input-group">
-          <label>Email Address</label>
           <input
             type="email"
             name="email"
-            className="login-input"
-            placeholder="smith@example.com"
+            placeholder="Email"
             value={formData.email}
             onChange={handleChange}
             required
-            disabled={loading}
+            style={inputStyle}
           />
-        </div>
-
-        <div className="input-group">
-          <label>Employee ID</label>
-          <input
-            type="text"
-            name="employeeId"
-            className="login-input"
-            placeholder="EMP001"
-            value={formData.employeeId}
-            onChange={handleChange}
-            required
-            disabled={loading}
-          />
-        </div>
-
-        <div className="input-group">
-          <label>Department</label>
-          <select
-            name="department"
-            className="login-input"
-            value={formData.department}
-            onChange={handleChange}
-            required
-            disabled={loading}
-          >
-            <option value="">Select a department</option>
-            <option value="Computer Science">Computer Science</option>
-            <option value="Electrical Engineering">
-              Electrical Engineering
-            </option>
-            <option value="Mechanical Engineering">
-              Mechanical Engineering
-            </option>
-            <option value="Civil Engineering">Civil Engineering</option>
-            <option value="Business">Business</option>
-          </select>
-        </div>
-
-        <div className="input-group">
-          <label>Subject</label>
-          <input
-            type="text"
-            name="subject"
-            className="login-input"
-            placeholder="e.g., Programming, Database"
-            value={formData.subject}
-            onChange={handleChange}
-            required
-            disabled={loading}
-          />
-        </div>
-
-        <div className="input-group">
-          <label>Password</label>
           <input
             type="password"
             name="password"
-            className="login-input"
-            placeholder="At least 6 characters"
+            placeholder="Password"
             value={formData.password}
             onChange={handleChange}
             required
-            disabled={loading}
+            style={inputStyle}
           />
-        </div>
-
-        <div className="input-group">
-          <label>Confirm Password</label>
           <input
-            type="password"
-            name="confirmPassword"
-            className="login-input"
-            placeholder="Re-enter password"
-            value={formData.confirmPassword}
+            type="text"
+            name="employeeId"
+            placeholder="Employee ID"
+            value={formData.employeeId}
             onChange={handleChange}
             required
-            disabled={loading}
+            style={inputStyle}
           />
-        </div>
+          <input
+            type="text"
+            name="department"
+            placeholder="Department"
+            value={formData.department}
+            onChange={handleChange}
+            required
+            style={inputStyle}
+          />
+          <input
+            type="text"
+            name="subject"
+            placeholder="Subject"
+            value={formData.subject}
+            onChange={handleChange}
+            required
+            style={inputStyle}
+          />
 
-        <button type="submit" className="login-btn-submit" disabled={loading}>
-          {loading ? "Creating Account..." : "Create Account"}
-        </button>
-
-        <div style={{ textAlign: "center", marginTop: "15px" }}>
-          <p style={{ fontSize: "14px" }}>
-            Already have an account?
-            <span
-              onClick={() => navigate("/teacher-login")}
-              style={{ color: "blue", cursor: "pointer", marginLeft: "5px" }}
-            >
-              Login here
-            </span>
-          </p>
-        </div>
-
-        <div className="back-link" onClick={() => navigate("/")}>
-          ← Back to selection
-        </div>
-      </form>
+          <button
+            type="submit"
+            style={{
+              padding: "12px",
+              backgroundColor: "#6f8fc3",
+              color: "white",
+              border: "none",
+              borderRadius: "35px",
+              cursor: "pointer",
+              fontSize: "16px",
+              fontWeight: "bold",
+              marginTop: "10px",
+            }}
+          >
+            Sign Up
+          </button>
+        </form>
+        <p style={{ textAlign: "center", marginTop: "20px", fontSize: "14px" }}>
+          Already have an account?{" "}
+          <Link
+            to="/teacher-login"
+            style={{
+              color: "#6f8fc3",
+              textDecoration: "none",
+              fontWeight: "bold",
+            }}
+          >
+            Login
+          </Link>
+        </p>
+      </div>
     </div>
   );
 };

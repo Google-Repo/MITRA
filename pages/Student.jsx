@@ -1,359 +1,978 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import '../src/StudentDashboard.css';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import "../src/StudentDashboard.css";
 
 const Student = () => {
   const navigate = useNavigate();
+  const [activeSection, setActiveSection] = useState("academic");
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [studentData, setStudentData] = useState(null);
+
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    if (user) {
+      try {
+        setStudentData(JSON.parse(user));
+      } catch (error) {
+        navigate("/student-login");
+      }
+    } else {
+      navigate("/student-login");
+    }
+  }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem('role');
-    navigate('/');
+    localStorage.removeItem("role");
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/");
   };
 
-  return (
-    <div className="dashboard-container">
-      {/* HEADER */}
-      <header className="dash-header">
-        <div className="school-info">
-          <div className="school-logo">🍎</div>
-          <div>
-            <h1 className="school-name">Jasper Elite School</h1>
-            <p className="school-desc">Student Performance Dashboard</p>
-          </div>
+  const navItems = [
+    { id: "fees", icon: "💳", label: "Fees Information" },
+    { id: "general", icon: "📋", label: "General Information" },
+    { id: "academic", icon: "🎓", label: "Academic Section" },
+    { id: "hostel", icon: "🏠", label: "Hostel Information" },
+    { id: "transport", icon: "🚌", label: "Transportation" },
+    { id: "library", icon: "📚", label: "Library Section" },
+  ];
+
+  /* ─────────── SECTION RENDERERS ─────────── */
+
+  const renderFees = () => (
+    <div className="section-content">
+      <div className="section-hero fees-hero">
+        <div className="section-hero-icon">💳</div>
+        <div>
+          <h2 className="section-hero-title">Fees Information</h2>
+          <p className="section-hero-sub">
+            Manage all your fee-related activities here
+          </p>
         </div>
-        <div className="header-icons">
-          <span className="icon" title="Notifications">🔔</span>
-          <span className="icon" title="Play">▶️</span>
-          <span className="icon" title="Settings">⚙️</span>
-          <span className="icon" title="Theme">🌙</span>
-          <div style={{fontSize: '12px', color: '#b2a8d6', marginLeft: '16px'}}>
-            Last updated <strong>3min ago</strong> 🔄
-          </div>
-          <div className="user-profile">
-            <span className="user-name">Signed in as <strong>Principal Carter</strong></span>
-            <div className="avatar">👩🏾</div>
-            <button 
-              onClick={handleLogout} 
-              style={{background:'transparent', border:'none', color:'#b2a8d6', cursor:'pointer', marginLeft:'8px', fontSize:'16px'}}
-              title="Logout"
+      </div>
+
+      <div className="info-cards-grid">
+        {[
+          {
+            icon: "💰",
+            title: "Pay Fees Online",
+            desc: "Pay your semester & miscellaneous fees securely online.",
+            tag: "Due: ₹12,500",
+            tagColor: "#ef4444",
+            btn: "Pay Now",
+            btnColor: "#6366f1",
+          },
+          {
+            icon: "🧾",
+            title: "Fees Receipts",
+            desc: "Download official fee receipts for paid transactions.",
+            tag: "Last: Mar 2026",
+            tagColor: "#10b981",
+            btn: "Download",
+            btnColor: "#10b981",
+          },
+          {
+            icon: "📒",
+            title: "Student Ledger",
+            desc: "View your complete fee ledger and payment history.",
+            tag: "3 Entries",
+            tagColor: "#f59e0b",
+            btn: "View Ledger",
+            btnColor: "#f59e0b",
+          },
+          {
+            icon: "🔄",
+            title: "Online Fee Transaction Status",
+            desc: "Track the status of your online fee transactions.",
+            tag: "Verified",
+            tagColor: "#10b981",
+            btn: "Check Status",
+            btnColor: "#6366f1",
+          },
+          {
+            icon: "✅",
+            title: "Verified Transaction Status",
+            desc: "Check if your transaction has been verified by the admin.",
+            tag: "2 Pending",
+            tagColor: "#ef4444",
+            btn: "View Status",
+            btnColor: "#0ea5e9",
+          },
+        ].map((item, i) => (
+          <div className="info-card" key={i}>
+            <div className="info-card-icon">{item.icon}</div>
+            <div className="info-card-body">
+              <h4 className="info-card-title">{item.title}</h4>
+              <p className="info-card-desc">{item.desc}</p>
+              <span
+                className="info-card-tag"
+                style={{
+                  background: item.tagColor + "22",
+                  color: item.tagColor,
+                }}
+              >
+                {item.tag}
+              </span>
+            </div>
+            <button
+              className="info-card-btn"
+              style={{ background: item.btnColor }}
             >
-              🚪
+              {item.btn}
             </button>
           </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  const renderGeneral = () => (
+    <div className="section-content">
+      <div className="section-hero general-hero">
+        <div className="section-hero-icon">📋</div>
+        <div>
+          <h2 className="section-hero-title">General Information</h2>
+          <p className="section-hero-sub">
+            Access your profile, notices, forms and more
+          </p>
+        </div>
+      </div>
+
+      <div className="info-cards-grid">
+        {[
+          {
+            icon: "👤",
+            title: "Your Profile",
+            desc: "View and manage your personal academic profile.",
+            tag: "Updated",
+            tagColor: "#10b981",
+            btn: "View Profile",
+            btnColor: "#6366f1",
+          },
+          {
+            icon: "📄",
+            title: "Question Papers",
+            desc: "Access previous year question papers for exam prep.",
+            tag: "12 Papers",
+            tagColor: "#6366f1",
+            btn: "Browse",
+            btnColor: "#6366f1",
+          },
+          {
+            icon: "📢",
+            title: "News / Notices",
+            desc: "Stay updated with latest college news and notices.",
+            tag: "5 New",
+            tagColor: "#ef4444",
+            btn: "Read Now",
+            btnColor: "#f59e0b",
+          },
+          {
+            icon: "📖",
+            title: "Syllabus",
+            desc: "Download the current semester syllabus for all subjects.",
+            tag: "Sem 4",
+            tagColor: "#0ea5e9",
+            btn: "Download",
+            btnColor: "#0ea5e9",
+          },
+          {
+            icon: "📁",
+            title: "Study Material",
+            desc: "Access notes and study material shared by teachers.",
+            tag: "28 Files",
+            tagColor: "#6366f1",
+            btn: "Open",
+            btnColor: "#6366f1",
+          },
+          {
+            icon: "✍️",
+            title: "Grievance Submission",
+            desc: "Submit and track your academic or campus grievances.",
+            tag: "New",
+            tagColor: "#ef4444",
+            btn: "Submit",
+            btnColor: "#ef4444",
+          },
+          {
+            icon: "📝",
+            title: "Online Form Approval",
+            desc: "Check the approval status of any submitted online form.",
+            tag: "Pending",
+            tagColor: "#f59e0b",
+            btn: "Track",
+            btnColor: "#f59e0b",
+          },
+          {
+            icon: "📞",
+            title: "Contact Details Update",
+            desc: "Update your phone number, email and address.",
+            tag: "Last: Jan 26",
+            tagColor: "#718096",
+            btn: "Update",
+            btnColor: "#0ea5e9",
+          },
+          {
+            icon: "🛠️",
+            title: "Other Service Requests",
+            desc: "Raise service requests for various academic needs.",
+            tag: "1 Open",
+            tagColor: "#f59e0b",
+            btn: "Raise Request",
+            btnColor: "#6366f1",
+          },
+          {
+            icon: "🆔",
+            title: "ABC ID Verification",
+            desc: "Verify your Academic Bank of Credits ID status.",
+            tag: "Verified",
+            tagColor: "#10b981",
+            btn: "Check",
+            btnColor: "#10b981",
+          },
+        ].map((item, i) => (
+          <div className="info-card" key={i}>
+            <div className="info-card-icon">{item.icon}</div>
+            <div className="info-card-body">
+              <h4 className="info-card-title">{item.title}</h4>
+              <p className="info-card-desc">{item.desc}</p>
+              <span
+                className="info-card-tag"
+                style={{
+                  background: item.tagColor + "22",
+                  color: item.tagColor,
+                }}
+              >
+                {item.tag}
+              </span>
+            </div>
+            <button
+              className="info-card-btn"
+              style={{ background: item.btnColor }}
+            >
+              {item.btn}
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  const renderAcademic = () => (
+    <div className="section-content">
+      <div className="section-hero academic-hero">
+        <div className="section-hero-icon">🎓</div>
+        <div>
+          <h2 className="section-hero-title">Academic Section</h2>
+          <p className="section-hero-sub">
+            Your timetable, marks, exams and attendance at a glance
+          </p>
+        </div>
+      </div>
+
+      {/* Stats Row */}
+      <div className="academic-stats-row">
+        {[
+          { label: "Attendance", value: "83.7%", color: "#10b981", icon: "✅" },
+          {
+            label: "Internal Marks",
+            value: "78 / 100",
+            color: "#6366f1",
+            icon: "📊",
+          },
+          {
+            label: "Backlog Subjects",
+            value: "0",
+            color: "#22c55e",
+            icon: "📗",
+          },
+          {
+            label: "Assignments Due",
+            value: "3",
+            color: "#f59e0b",
+            icon: "📌",
+          },
+        ].map((s, i) => (
+          <div
+            className="acad-stat-card"
+            key={i}
+            style={{ borderTop: `4px solid ${s.color}` }}
+          >
+            <span className="acad-stat-icon">{s.icon}</span>
+            <p className="acad-stat-value" style={{ color: s.color }}>
+              {s.value}
+            </p>
+            <p className="acad-stat-label">{s.label}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="academic-grid">
+        {/* Time Table */}
+        <div className="academic-card">
+          <div className="academic-card-header">
+            <span>🗓️ Time Table</span>
+            <span className="badge blue">Sem 4</span>
+          </div>
+          <table className="acad-table">
+            <thead>
+              <tr>
+                <th>Day</th>
+                <th>Subject</th>
+                <th>Time</th>
+                <th>Room</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                ["Monday", "Data Structures", "9:00–10:30", "A-101"],
+                ["Tuesday", "Operating Systems", "10:30–12:00", "B-202"],
+                ["Wednesday", "DBMS", "9:00–10:30", "A-105"],
+                ["Thursday", "CN Networks", "11:00–12:30", "C-301"],
+                ["Friday", "Software Eng.", "9:00–10:30", "A-101"],
+              ].map(([d, s, t, r], i) => (
+                <tr key={i}>
+                  <td>{d}</td>
+                  <td>{s}</td>
+                  <td>{t}</td>
+                  <td>{r}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Internal Assessment Marks */}
+        <div className="academic-card">
+          <div className="academic-card-header">
+            <span>📊 Internal Assessment Marks</span>
+            <span className="badge purple">Sem 4</span>
+          </div>
+          <div className="marks-list">
+            {[
+              ["Data Structures", 82, 100],
+              ["Operating Systems", 75, 100],
+              ["DBMS", 90, 100],
+              ["CN Networks", 68, 100],
+              ["Software Eng.", 85, 100],
+            ].map(([sub, got, total], i) => (
+              <div className="marks-row" key={i}>
+                <span className="marks-sub">{sub}</span>
+                <div className="marks-bar-track">
+                  <div
+                    className="marks-bar-fill"
+                    style={{
+                      width: `${(got / total) * 100}%`,
+                      background: got >= 75 ? "#6366f1" : "#ef4444",
+                    }}
+                  ></div>
+                </div>
+                <span
+                  className="marks-score"
+                  style={{ color: got >= 75 ? "#10b981" : "#ef4444" }}
+                >
+                  {got}/{total}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Exam Result */}
+        <div className="academic-card">
+          <div className="academic-card-header">
+            <span>🏆 Exam Result</span>
+            <span className="badge green">Sem 3 Declared</span>
+          </div>
+          <table className="acad-table">
+            <thead>
+              <tr>
+                <th>Subject</th>
+                <th>Marks</th>
+                <th>Grade</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                ["Mathematics", 88, "A", "Pass"],
+                ["Physics", 74, "B", "Pass"],
+                ["Chemistry", 91, "A+", "Pass"],
+                ["English", 65, "C", "Pass"],
+                ["Comp. Science", 95, "O", "Pass"],
+              ].map(([sub, m, g, st], i) => (
+                <tr key={i}>
+                  <td>{sub}</td>
+                  <td>{m}</td>
+                  <td>
+                    <span className="grade-badge">{g}</span>
+                  </td>
+                  <td>
+                    <span className="status-pass">{st}</span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Backlog Subjects */}
+        <div className="academic-card">
+          <div className="academic-card-header">
+            <span>📗 Current Backlog Subjects</span>
+            <span className="badge green">All Clear</span>
+          </div>
+          <div className="empty-state">
+            <div className="empty-icon">🎉</div>
+            <p>No backlog subjects! You're on track.</p>
+          </div>
+        </div>
+
+        {/* Assignments */}
+        <div className="academic-card">
+          <div className="academic-card-header">
+            <span>📌 Assignments</span>
+            <span className="badge orange">3 Pending</span>
+          </div>
+          <div className="assignment-list">
+            {[
+              {
+                sub: "Data Structures",
+                title: "Binary Tree Implementation",
+                due: "Apr 30",
+                status: "Pending",
+              },
+              {
+                sub: "DBMS",
+                title: "ER Diagram for Library",
+                due: "May 2",
+                status: "Submitted",
+              },
+              {
+                sub: "Software Eng.",
+                title: "SRS Document Preparation",
+                due: "May 5",
+                status: "Pending",
+              },
+              {
+                sub: "CN Networks",
+                title: "Subnetting Exercises",
+                due: "May 8",
+                status: "Pending",
+              },
+            ].map((a, i) => (
+              <div className="assignment-row" key={i}>
+                <div className="assignment-info">
+                  <span className="assignment-sub">{a.sub}</span>
+                  <span className="assignment-title">{a.title}</span>
+                  <span className="assignment-due">📅 Due: {a.due}</span>
+                </div>
+                <span
+                  className={`assign-status ${a.status === "Submitted" ? "submitted" : "pending"}`}
+                >
+                  {a.status}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Attendance Status */}
+        <div className="academic-card">
+          <div className="academic-card-header">
+            <span>✅ Attendance Status</span>
+            <span className="badge blue">Sem 4</span>
+          </div>
+          <div className="attendance-list">
+            {[
+              ["Data Structures", 38, 45],
+              ["Operating Systems", 32, 40],
+              ["DBMS", 40, 42],
+              ["CN Networks", 28, 38],
+              ["Software Eng.", 35, 40],
+            ].map(([sub, att, total], i) => {
+              const pct = Math.round((att / total) * 100);
+              return (
+                <div className="att-row" key={i}>
+                  <span className="att-sub">{sub}</span>
+                  <div className="att-bar-track">
+                    <div
+                      className="att-bar-fill"
+                      style={{
+                        width: `${pct}%`,
+                        background: pct >= 75 ? "#10b981" : "#ef4444",
+                      }}
+                    ></div>
+                  </div>
+                  <span
+                    className="att-pct"
+                    style={{ color: pct >= 75 ? "#10b981" : "#ef4444" }}
+                  >
+                    {pct}%
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderHostel = () => (
+    <div className="section-content">
+      <div className="section-hero hostel-hero">
+        <div className="section-hero-icon">🏠</div>
+        <div>
+          <h2 className="section-hero-title">Hostel Information</h2>
+          <p className="section-hero-sub">
+            Room details, fees, notices and complaints
+          </p>
+        </div>
+      </div>
+
+      <div className="hostel-overview">
+        <div className="hostel-room-card">
+          <div className="hostel-room-icon">🏠</div>
+          <div>
+            <h3 className="hostel-room-num">Room 204-B</h3>
+            <p className="hostel-room-block">Block C · Boys Hostel</p>
+          </div>
+          <div className="hostel-room-meta">
+            <span>Capacity: 2</span>
+            <span>Floor: 2nd</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="info-cards-grid">
+        {[
+          {
+            icon: "🛏️",
+            title: "Hostel Room Details",
+            desc: "Room No: 204-B, Block C, 2nd Floor, Double Occupancy.",
+            tag: "Allotted",
+            tagColor: "#10b981",
+            btn: "View Details",
+            btnColor: "#6366f1",
+          },
+          {
+            icon: "💳",
+            title: "Hostel Fee Status",
+            desc: "Hostel fee for the current semester.",
+            tag: "Paid ✓",
+            tagColor: "#10b981",
+            btn: "Download Receipt",
+            btnColor: "#10b981",
+          },
+          {
+            icon: "📢",
+            title: "Hostel Notices",
+            desc: "Latest hostel warden notices and announcements.",
+            tag: "2 New",
+            tagColor: "#ef4444",
+            btn: "Read",
+            btnColor: "#f59e0b",
+          },
+          {
+            icon: "🔧",
+            title: "Complaint Registration",
+            desc: "Register maintenance or other hostel complaints.",
+            tag: "1 Open",
+            tagColor: "#f59e0b",
+            btn: "Register",
+            btnColor: "#ef4444",
+          },
+        ].map((item, i) => (
+          <div className="info-card" key={i}>
+            <div className="info-card-icon">{item.icon}</div>
+            <div className="info-card-body">
+              <h4 className="info-card-title">{item.title}</h4>
+              <p className="info-card-desc">{item.desc}</p>
+              <span
+                className="info-card-tag"
+                style={{
+                  background: item.tagColor + "22",
+                  color: item.tagColor,
+                }}
+              >
+                {item.tag}
+              </span>
+            </div>
+            <button
+              className="info-card-btn"
+              style={{ background: item.btnColor }}
+            >
+              {item.btn}
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  const renderTransport = () => (
+    <div className="section-content">
+      <div className="section-hero transport-hero">
+        <div className="section-hero-icon">🚌</div>
+        <div>
+          <h2 className="section-hero-title">Transportation</h2>
+          <p className="section-hero-sub">
+            Bus routes, stops, fees and notices
+          </p>
+        </div>
+      </div>
+
+      <div className="transport-banner">
+        <div className="transport-bus-icon">🚌</div>
+        <div>
+          <h3>Route 7 — Nashik Phata → MITRA Campus</h3>
+          <p>
+            Bus No: MH-12-AB-4567 &nbsp;|&nbsp; Departure: 8:00 AM &nbsp;|&nbsp;
+            Return: 5:30 PM
+          </p>
+        </div>
+        <span className="transport-status active">Active</span>
+      </div>
+
+      <div className="info-cards-grid">
+        {[
+          {
+            icon: "🗺️",
+            title: "Bus Route Details",
+            desc: "Your assigned bus route: Nashik Phata → Wakad → MITRA Campus.",
+            tag: "Route 7",
+            tagColor: "#6366f1",
+            btn: "View Route",
+            btnColor: "#6366f1",
+          },
+          {
+            icon: "📍",
+            title: "Bus Stops Information",
+            desc: "Pick-up stop: Wakad Chowk at 8:15 AM. Drop-off: Campus Gate.",
+            tag: "Wakad Stop",
+            tagColor: "#0ea5e9",
+            btn: "View Stops",
+            btnColor: "#0ea5e9",
+          },
+          {
+            icon: "💳",
+            title: "Transport Fee Status",
+            desc: "Annual transport fee for current academic year.",
+            tag: "Paid ✓",
+            tagColor: "#10b981",
+            btn: "Receipt",
+            btnColor: "#10b981",
+          },
+          {
+            icon: "📢",
+            title: "Transport Notices",
+            desc: "Latest transport department notices and schedule changes.",
+            tag: "1 New",
+            tagColor: "#f59e0b",
+            btn: "Read",
+            btnColor: "#f59e0b",
+          },
+        ].map((item, i) => (
+          <div className="info-card" key={i}>
+            <div className="info-card-icon">{item.icon}</div>
+            <div className="info-card-body">
+              <h4 className="info-card-title">{item.title}</h4>
+              <p className="info-card-desc">{item.desc}</p>
+              <span
+                className="info-card-tag"
+                style={{
+                  background: item.tagColor + "22",
+                  color: item.tagColor,
+                }}
+              >
+                {item.tag}
+              </span>
+            </div>
+            <button
+              className="info-card-btn"
+              style={{ background: item.btnColor }}
+            >
+              {item.btn}
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  const renderLibrary = () => (
+    <div className="section-content">
+      <div className="section-hero library-hero">
+        <div className="section-hero-icon">📚</div>
+        <div>
+          <h2 className="section-hero-title">Library Section</h2>
+          <p className="section-hero-sub">
+            Search books, check issued books, return dates and fines
+          </p>
+        </div>
+      </div>
+
+      {/* OPAC Search Bar */}
+      <div className="library-search-bar">
+        <span className="library-search-icon">🔍</span>
+        <input
+          type="text"
+          placeholder="Search books by title, author or ISBN (OPAC)..."
+          className="library-search-input"
+        />
+        <button className="library-search-btn">Search</button>
+      </div>
+
+      {/* Issued Books Table */}
+      <div className="academic-card" style={{ marginBottom: "24px" }}>
+        <div className="academic-card-header">
+          <span>📖 Issued Books Details</span>
+          <span className="badge blue">2 Issued</span>
+        </div>
+        <table className="acad-table">
+          <thead>
+            <tr>
+              <th>Book Title</th>
+              <th>Author</th>
+              <th>Issue Date</th>
+              <th>Return Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              [
+                "Operating System Concepts",
+                "Silberschatz",
+                "Apr 10, 2026",
+                "Apr 25, 2026",
+                "Overdue",
+              ],
+              [
+                "DBMS Fundamentals",
+                "Ramez Elmasri",
+                "Apr 15, 2026",
+                "Apr 30, 2026",
+                "Issued",
+              ],
+            ].map(([b, a, id, rd, st], i) => (
+              <tr key={i}>
+                <td>{b}</td>
+                <td>{a}</td>
+                <td>{id}</td>
+                <td>{rd}</td>
+                <td>
+                  <span
+                    className={`status-badge ${st === "Overdue" ? "overdue" : "active-badge"}`}
+                  >
+                    {st}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="info-cards-grid">
+        {[
+          {
+            icon: "📚",
+            title: "OPAC – Search Books",
+            desc: "Search the online catalogue by title, author or ISBN.",
+            tag: "10,000+ Books",
+            tagColor: "#6366f1",
+            btn: "Search",
+            btnColor: "#6366f1",
+          },
+          {
+            icon: "📖",
+            title: "Issued Books Details",
+            desc: "View list of currently issued books and due dates.",
+            tag: "2 Issued",
+            tagColor: "#0ea5e9",
+            btn: "View All",
+            btnColor: "#0ea5e9",
+          },
+          {
+            icon: "📅",
+            title: "Return Date Status",
+            desc: "Check the return deadline for all your borrowed books.",
+            tag: "1 Overdue!",
+            tagColor: "#ef4444",
+            btn: "View Dates",
+            btnColor: "#ef4444",
+          },
+          {
+            icon: "⚠️",
+            title: "Fine Status",
+            desc: 'Overdue fine for "OS Concepts": ₹5/day × 1 day = ₹5.',
+            tag: "₹5 Fine",
+            tagColor: "#f59e0b",
+            btn: "Pay Fine",
+            btnColor: "#f59e0b",
+          },
+          {
+            icon: "📢",
+            title: "Library Notices",
+            desc: "Latest notices from Library department.",
+            tag: "3 New",
+            tagColor: "#6366f1",
+            btn: "Read",
+            btnColor: "#6366f1",
+          },
+        ].map((item, i) => (
+          <div className="info-card" key={i}>
+            <div className="info-card-icon">{item.icon}</div>
+            <div className="info-card-body">
+              <h4 className="info-card-title">{item.title}</h4>
+              <p className="info-card-desc">{item.desc}</p>
+              <span
+                className="info-card-tag"
+                style={{
+                  background: item.tagColor + "22",
+                  color: item.tagColor,
+                }}
+              >
+                {item.tag}
+              </span>
+            </div>
+            <button
+              className="info-card-btn"
+              style={{ background: item.btnColor }}
+            >
+              {item.btn}
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  const renderSection = () => {
+    switch (activeSection) {
+      case "fees":
+        return renderFees();
+      case "general":
+        return renderGeneral();
+      case "academic":
+        return renderAcademic();
+      case "hostel":
+        return renderHostel();
+      case "transport":
+        return renderTransport();
+      case "library":
+        return renderLibrary();
+      default:
+        return renderAcademic();
+    }
+  };
+
+  if (!studentData) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <h2>Loading Dashboard...</h2>
+      </div>
+    );
+  }
+
+  /* ─────────── JSX ─────────── */
+  return (
+    <div className="sd-root">
+      {/* ── TOP HEADER ── */}
+      <header className="sd-header">
+        <div className="sd-header-left">
+          <button
+            className="sd-menu-btn"
+            onClick={() => setSidebarOpen((o) => !o)}
+          >
+            ☰
+          </button>
+          <div className="sd-logo-box">🎓</div>
+          <div>
+            <h1 className="sd-college-name">MITRA</h1>
+            <p className="sd-college-sub">Student Portal</p>
+          </div>
+        </div>
+        <div className="sd-header-right">
+          <div className="sd-notif">
+            🔔<span className="notif-dot"></span>
+          </div>
+          <div className="sd-user-wrap">
+            <div className="sd-avatar">
+              {studentData.name.charAt(0).toUpperCase()}
+            </div>
+            <div>
+              <p className="sd-user-name">{studentData.name}</p>
+              <p className="sd-user-roll">Roll No: {studentData.rollNo}</p>
+            </div>
+          </div>
+          <button
+            className="sd-logout-btn"
+            onClick={handleLogout}
+            title="Logout"
+          >
+            🚪 Logout
+          </button>
         </div>
       </header>
 
-      {/* DASH GRID */}
-      <main className="dash-content">
-        
-        {/* LEFT COLUMN */}
-        <div className="col-left">
-          
-          {/* Quick Stats Row 1 */}
-          <div className="quick-stats-row">
-            <div className="selector-box">
-              <select><option>Select Year</option><option>2026</option></select>
-            </div>
-            <div className="card" style={{flex: 1.5, padding: '16px', display: 'flex', alignItems: 'center', gap: '16px'}}>
-              <div style={{fontSize: '32px'}}>👥</div>
-              <div>
-                <p className="stat-val">3,457</p>
-                <p className="stat-label">Student Count</p>
-              </div>
-            </div>
-            <div className="card" style={{flex: 1.5, padding: '16px', display: 'flex', alignItems: 'center', gap: '16px'}}>
-              <div style={{fontSize: '32px'}}>✅</div>
-              <div>
-                <p className="stat-val">83.7%</p>
-                <p className="stat-label">Student Attendance</p>
-              </div>
-            </div>
+      <div className="sd-body">
+        {/* ── SIDEBAR ── */}
+        <aside className={`sd-sidebar ${sidebarOpen ? "open" : "closed"}`}>
+          <div className="sd-sidebar-inner">
+            <p className="sd-sidebar-label">MAIN MENU</p>
+            {navItems.map((item) => (
+              <button
+                key={item.id}
+                className={`sd-nav-item ${activeSection === item.id ? "active" : ""}`}
+                onClick={() => setActiveSection(item.id)}
+              >
+                <span className="sd-nav-icon">{item.icon}</span>
+                {sidebarOpen && (
+                  <span className="sd-nav-label">{item.label}</span>
+                )}
+              </button>
+            ))}
           </div>
 
-          {/* Quick Stats Row 2 (Selectors) */}
-          <div className="quick-stats-row" style={{marginTop: '-8px'}}>
-            <div className="selector-box">
-              <select><option>Select Grade</option><option>Grade 3</option></select>
+          {sidebarOpen && (
+            <div className="sd-sidebar-footer">
+              <div className="sd-student-mini-card">
+                <div className="sd-mini-avatar">
+                  {studentData.name.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <p className="sd-mini-name">{studentData.name}</p>
+                  <p className="sd-mini-dept">{studentData.course}</p>
+                </div>
+              </div>
             </div>
-            <div className="trend-row" style={{flex: 3, display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
-              <div>Student Count: <span className="trend-up">4.5% 📈</span></div>
-              <div>Student Attendance: <span className="trend-down">1.2% 📉</span></div>
-              <div>Exam Average: <span className="trend-up">77.7% 📈</span></div>
-            </div>
+          )}
+        </aside>
+
+        {/* ── MAIN CONTENT ── */}
+        <main className="sd-main">
+          {/* Breadcrumb */}
+          <div className="sd-breadcrumb">
+            <span>Home</span>
+            <span className="sd-bc-sep">›</span>
+            <span className="sd-bc-active">
+              {navItems.find((n) => n.id === activeSection)?.label}
+            </span>
           </div>
 
-          {/* Student Count Chart */}
-          <div className="card">
-            <div className="card-header">
-              <h3 className="card-title">Student Count</h3>
-              <div style={{fontSize:'13px', color:'#5a67d8', display:'flex', gap:'12px', cursor:'pointer'}}>
-                <span>Grade ↑↓</span>
-                <span>Gender 👤</span>
-                <span>🔄</span>
-              </div>
-            </div>
-            <div className="donut-grid">
-              <div className="donut-mock">
-                <div className="donut-inner">
-                  <span className="donut-val">28.9%</span>
-                  <span className="donut-lbl">GRADE 3</span>
-                </div>
-              </div>
-              <div className="chart-bars">
-                {/* Custom bars */}
-                <div className="bar-row">
-                  <div className="bar-label"><div className="dot" style={{background:'#667eea'}}></div> Grade 1</div>
-                  <div className="bar-track"><div className="bar-fill" style={{width:'40%', background:'#667eea'}}></div></div>
-                  <span>457</span>
-                </div>
-                <div className="bar-row">
-                  <div className="bar-label"><div className="dot" style={{background:'#00c6ff'}}></div> Grade 2</div>
-                  <div className="bar-track"><div className="bar-fill" style={{width:'70%', background:'#00c6ff'}}></div></div>
-                  <span>769</span>
-                </div>
-                <div className="bar-row">
-                  <div className="bar-label"><div className="dot" style={{background:'#764ba2'}}></div> Grade 3</div>
-                  <div className="bar-track"><div className="bar-fill" style={{width:'90%', background:'#764ba2'}}></div></div>
-                  <span>1000</span>
-                </div>
-                <div className="bar-row">
-                  <div className="bar-label"><div className="dot" style={{background:'#0072ff'}}></div> Grade 4</div>
-                  <div className="bar-track"><div className="bar-fill" style={{width:'50%', background:'#0072ff'}}></div></div>
-                  <span>553</span>
-                </div>
-                <div className="bar-row">
-                  <div className="bar-label"><div className="dot" style={{background:'#f6d365'}}></div> Grade 5</div>
-                  <div className="bar-track"><div className="bar-fill" style={{width:'60%', background:'#f6d365'}}></div></div>
-                  <span>678</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Examination Results */}
-          <div className="card">
-            <div className="card-header" style={{marginBottom: '0'}}>
-              <h3 className="card-title">Examination Results</h3>
-              <div style={{fontSize:'13px', color:'#5a67d8', display:'flex', gap:'12px', cursor:'pointer'}}>
-                 <span>Grade ↑↓</span>
-                 <span>Gender 👤</span>
-                 <span>🔄</span>
-              </div>
-            </div>
-            <div className="exam-legend">
-              <div className="legend-item"><div className="legend-color" style={{background:'#4c1d95'}}></div> Pass</div>
-              <div className="legend-item"><div className="legend-color" style={{background:'#3b82f6'}}></div> Average</div>
-              <div className="legend-item"><div className="legend-color" style={{background:'#f59e0b'}}></div> Fail</div>
-            </div>
-            
-            <div className="bar-chart-vertical">
-              <div className="y-axis">
-                <span>2k</span>
-                <span>1k</span>
-                <span>500</span>
-              </div>
-              
-              <div className="x-group">
-                <div className="v-bar" style={{height: '140px', background:'#4c1d95'}}></div>
-                <div className="v-bar" style={{height: '50px', background:'#3b82f6'}}></div>
-                <div className="v-bar" style={{height: '20px', background:'#f59e0b'}}></div>
-                <div className="x-label">Maths</div>
-              </div>
-              
-              <div className="x-group">
-                <div className="v-bar" style={{height: '60px', background:'#4c1d95'}}></div>
-                <div className="v-bar" style={{height: '110px', background:'#3b82f6'}}></div>
-                <div className="v-bar" style={{height: '10px', background:'#f59e0b'}}></div>
-                <div className="x-label">English</div>
-                <div style={{position:'absolute', top:'-25px', left:'50%', transform:'translateX(-50%)', background:'#3b82f6', color:'white', fontSize:'10px', padding:'2px 6px', borderRadius:'10px'}}>59.9%</div>
-              </div>
-
-              <div className="x-group">
-                <div className="v-bar" style={{height: '80px', background:'#4c1d95'}}></div>
-                <div className="v-bar" style={{height: '40px', background:'#3b82f6'}}></div>
-                <div className="v-bar" style={{height: '80px', background:'#f59e0b'}}></div>
-                <div className="x-label">Mandarin</div>
-              </div>
-
-              <div className="x-group">
-                <div className="v-bar" style={{height: '70px', background:'#4c1d95'}}></div>
-                <div className="v-bar" style={{height: '100px', background:'#3b82f6'}}></div>
-                <div className="v-bar" style={{height: '30px', background:'#f59e0b'}}></div>
-                <div className="x-label">Science</div>
-              </div>
-              
-              <div className="x-group">
-                <div className="v-bar" style={{height: '150px', background:'#4c1d95'}}></div>
-                <div className="v-bar" style={{height: '50px', background:'#3b82f6'}}></div>
-                <div className="v-bar" style={{height: '10px', background:'#f59e0b'}}></div>
-                <div className="x-label">Arts</div>
-              </div>
-              
-              <div className="x-group">
-                <div className="v-bar" style={{height: '90px', background:'#4c1d95'}}></div>
-                <div className="v-bar" style={{height: '40px', background:'#3b82f6'}}></div>
-                <div className="v-bar" style={{height: '0px', background:'#f59e0b'}}></div>
-                <div className="x-label">Exercise</div>
-              </div>
-              
-            </div>
-          </div>
-
-        </div>
-
-        {/* RIGHT COLUMN */}
-        <div className="col-right">
-          
-          {/* Top rankings */}
-          <div className="card">
-            <div className="grid-2x2">
-              <div>
-                 <h4 style={{fontSize:'13px', color:'#718096', margin:'0 0 8px'}}>Best In Marks</h4>
-                 <div className="rank-card">
-                   <div className="rank-avatar" style={{background:'#c6f6d5', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'24px'}}>👦🏽</div>
-                   <div className="rank-info">
-                     <h4>Kinara Zuri</h4>
-                     <div className="rank-stats">
-                       <div><span>3</span> Grade</div>
-                       <div><span>5</span> GPA</div>
-                       <div><span>77.3%</span> Attend</div>
-                     </div>
-                   </div>
-                 </div>
-              </div>
-
-              <div>
-                 <h4 style={{fontSize:'13px', color:'#718096', margin:'0 0 8px'}}>Best In Attendance</h4>
-                 <div className="rank-card">
-                   <div className="rank-avatar" style={{background:'#feebc8', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'24px'}}>👧🏻</div>
-                   <div className="rank-info">
-                     <h4>Lea Jabulani</h4>
-                     <div className="rank-stats">
-                       <div><span>4</span> Grade</div>
-                       <div><span>4</span> GPA</div>
-                       <div><span>75.3%</span> Marks</div>
-                     </div>
-                   </div>
-                 </div>
-              </div>
-
-              <div>
-                 <h4 style={{fontSize:'13px', color:'#718096', margin:'0 0 8px', marginTop:'16px'}}>Most Improved In Marks</h4>
-                 <div className="rank-card">
-                   <div className="rank-avatar" style={{background:'#fed7e2', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'24px'}}>👧🏽</div>
-                   <div className="rank-info">
-                     <h4>Corny Niang</h4>
-                     <div className="rank-stats">
-                       <div><span>5</span> Grade</div>
-                       <div><span>3</span> GPA</div>
-                       <div><span>80.2%</span> Attend</div>
-                     </div>
-                   </div>
-                 </div>
-              </div>
-
-              <div>
-                 <h4 style={{fontSize:'13px', color:'#718096', margin:'0 0 8px', marginTop:'16px'}}>Most Improved In Attendance</h4>
-                 <div className="rank-card">
-                   <div className="rank-avatar" style={{background:'#e2e8f0', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'24px'}}>👦🏻</div>
-                   <div className="rank-info">
-                     <h4>Yao Ming</h4>
-                     <div className="rank-stats">
-                       <div><span>1</span> Grade</div>
-                       <div><span>5</span> GPA</div>
-                       <div><span>86.8%</span> Marks</div>
-                     </div>
-                   </div>
-                 </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Student Details */}
-          <div className="card">
-            <div className="card-header">
-              <h3 className="card-title">Student Details</h3>
-              <div style={{display:'flex', gap:'8px', alignItems:'center'}}>
-                <select style={{padding:'4px 8px', borderRadius:'6px', border:'1px solid #e2e8f0', color:'#5a67d8', outline:'none', fontWeight:'600'}}>
-                  <option>Grade 1</option>
-                  <option>Grade 2</option>
-                  <option>Grade 3</option>
-                </select>
-                <span style={{color:'#a0aec0', cursor:'pointer'}}>🔲 🔄</span>
-              </div>
-            </div>
-            
-            <div className="student-cards">
-              <div className="s-card">
-                <div className="s-avatar" style={{background:'#fed7e2', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'32px'}}>👦🏽</div>
-                <div className="s-gender">Male</div>
-                <h4 className="s-name">Luka Magic</h4>
-                <div className="s-stats">
-                  <div><strong>73.7%</strong><br/>Marks</div>
-                  <div><strong>5</strong><br/>GPA</div>
-                  <div><strong>77.3%</strong><br/>Attend</div>
-                </div>
-              </div>
-              
-              <div className="s-card">
-                <div className="s-avatar" style={{background:'#e9d8fd', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'32px'}}>👧🏻</div>
-                <div className="s-gender">Female</div>
-                <h4 className="s-name">Bianca Shangwe</h4>
-                <div className="s-stats">
-                  <div><strong>63.7%</strong><br/>Marks</div>
-                  <div><strong>2</strong><br/>GPA</div>
-                  <div><strong>67.7%</strong><br/>Attend</div>
-                </div>
-              </div>
-              
-              <div className="s-card">
-                <div className="s-avatar" style={{background:'#c6f6d5', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'32px'}}>👦🏻</div>
-                <div className="s-gender">Male</div>
-                <h4 className="s-name">Alpha Kenya</h4>
-                <div className="s-stats">
-                  <div><strong>83.1%</strong><br/>Marks</div>
-                  <div><strong>5</strong><br/>GPA</div>
-                  <div><strong>79.9%</strong><br/>Attend</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Average Score */}
-          <div className="card">
-             <div className="card-header">
-               <h3 className="card-title">Average Score</h3>
-               <span style={{color:'#a0aec0', cursor:'pointer'}}>⇅ 🔄</span>
-             </div>
-             <div className="radiuses">
-               
-               <div className="radial-wrap">
-                 <div className="radial-chart" style={{background: 'conic-gradient(#5a67d8 94.5%, #edf2f7 0)'}}>
-                   <div className="r-inner">94.5%</div>
-                 </div>
-                 <span className="r-label">English</span>
-               </div>
-               
-               <div className="radial-wrap">
-                 <div className="radial-chart" style={{background: 'conic-gradient(#6b46c1 81.9%, #edf2f7 0)'}}>
-                   <div className="r-inner">81.9%</div>
-                 </div>
-                 <span className="r-label">Maths</span>
-               </div>
-               
-               <div className="radial-wrap">
-                 <div className="radial-chart" style={{background: 'conic-gradient(#0bc5ea 69.4%, #edf2f7 0)'}}>
-                   <div className="r-inner">69.4%</div>
-                 </div>
-                 <span className="r-label">Science</span>
-               </div>
-
-             </div>
-          </div>
-
-        </div>
-
-      </main>
+          {renderSection()}
+        </main>
+      </div>
     </div>
   );
 };
