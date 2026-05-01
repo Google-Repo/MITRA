@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./LoginPages.css";
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/teachers";
+const API_URL = "http://localhost:8080/api/teacher";
 
 const TeacherLogin = () => {
   const [isSignup, setIsSignup] = useState(false);

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+         http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         version="4.0">
+
+    <display-name>MITRA Backend</display-name>
+
+    <!-- Student Servlets -->
+    <servlet>
+        <servlet-name>StudentSignup</servlet-name>
+        <servlet-class>com.mitra.servlet.StudentSignupServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>StudentSignup</servlet-name>
+        <url-pattern>/api/student/signup</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>StudentLogin</servlet-name>
+        <servlet-class>com.mitra.servlet.StudentLoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>StudentLogin</servlet-name>
+        <url-pattern>/api/student/login</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>StudentGetAll</servlet-name>
+        <servlet-class>com.mitra.servlet.StudentGetAllServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>StudentGetAll</servlet-name>
+        <url-pattern>/api/student</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>StudentGetById</servlet-name>
+        <servlet-class>com.mitra.servlet.StudentGetByIdServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>StudentGetById</servlet-name>
+        <url-pattern>/api/student/get</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>StudentUpdate</servlet-name>
+        <servlet-class>com.mitra.servlet.StudentUpdateServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>StudentUpdate</servlet-name>
+        <url-pattern>/api/student/update</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>StudentDelete</servlet-name>
+        <servlet-class>com.mitra.servlet.StudentDeleteServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>StudentDelete</servlet-name>
+        <url-pattern>/api/student/delete</url-pattern>
+    </servlet-mapping>
+
+    <!-- Teacher Servlets -->
+    <servlet>
+        <servlet-name>TeacherSignup</servlet-name>
+        <servlet-class>com.mitra.servlet.TeacherSignupServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TeacherSignup</servlet-name>
+        <url-pattern>/api/teacher/signup</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>TeacherLogin</servlet-name>
+        <servlet-class>com.mitra.servlet.TeacherLoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TeacherLogin</servlet-name>
+        <url-pattern>/api/teacher/login</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>TeacherGetAll</servlet-name>
+        <servlet-class>com.mitra.servlet.TeacherGetAllServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TeacherGetAll</servlet-name>
+        <url-pattern>/api/teacher</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>TeacherGetById</servlet-name>
+        <servlet-class>com.mitra.servlet.TeacherGetByIdServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TeacherGetById</servlet-name>
+        <url-pattern>/api/teacher/get</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>TeacherUpdate</servlet-name>
+        <servlet-class>com.mitra.servlet.TeacherUpdateServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TeacherUpdate</servlet-name>
+        <url-pattern>/api/teacher/update</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>TeacherDelete</servlet-name>
+        <servlet-class>com.mitra.servlet.TeacherDeleteServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TeacherDelete</servlet-name>
+        <url-pattern>/api/teacher/delete</url-pattern>
+    </servlet-mapping>
+
+    <!-- Admin Servlets -->
+    <servlet>
+        <servlet-name>AdminSignup</servlet-name>
+        <servlet-class>com.mitra.servlet.AdminSignupServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminSignup</servlet-name>
+        <url-pattern>/api/admin/signup</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AdminLogin</servlet-name>
+        <servlet-class>com.mitra.servlet.AdminLoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminLogin</servlet-name>
+        <url-pattern>/api/admin/login</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AdminGetAll</servlet-name>
+        <servlet-class>com.mitra.servlet.AdminGetAllServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminGetAll</servlet-name>
+        <url-pattern>/api/admin</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AdminGetById</servlet-name>
+        <servlet-class>com.mitra.servlet.AdminGetByIdServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminGetById</servlet-name>
+        <url-pattern>/api/admin/get</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AdminUpdate</servlet-name>
+        <servlet-class>com.mitra.servlet.AdminUpdateServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminUpdate</servlet-name>
+        <url-pattern>/api/admin/update</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AdminDelete</servlet-name>
+        <servlet-class>com.mitra.servlet.AdminDeleteServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminDelete</servlet-name>
+        <url-pattern>/api/admin/delete</url-pattern>
+    </servlet-mapping>
+
+    <!-- CORS Filter -->
+    <filter>
+        <filter-name>CORSFilter</filter-name>
+        <filter-class>com.mitra.util.CORSFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>CORSFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+</web-app>
