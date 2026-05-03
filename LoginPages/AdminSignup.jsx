@@ -1,63 +1,73 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./LoginPages.css";
-import axios from "axios";
-
-const API_URL = "http://localhost:8080/api/admin";
 
 const AdminSignup = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
-    confirmPassword: "",
-    adminId: "",
+    adminId: "", // Maps to admin_id in the database
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => {
+      const newData = { ...prev, [e.target.name]: e.target.value };
+
+      // Auto-generate official email ID based on Name and Admin ID
+      if (e.target.name === "name" || e.target.name === "adminId") {
+        const firstName = newData.name
+          ? newData.name
+              .split(" ")[0]
+              .toLowerCase()
+              .replace(/[^a-z0-9]/g, "")
+          : "admin";
+        const id = newData.adminId
+          ? newData.adminId.toLowerCase().replace(/[^a-z0-9]/g, "")
+          : "";
+        if (firstName && id) {
+          newData.email = `${firstName}.${id}@mitra.edu`;
+        } else {
+          newData.email = "";
+        }
+      }
+      return newData;
+    });
   };
 
   const handleSignup = async (e) => {
     e.preventDefault();
     setError("");
-
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
-
-    if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters");
-      return;
-    }
-
     setLoading(true);
 
     try {
-      const response = await axios.post(`${API_URL}/signup`, {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-        adminId: formData.adminId,
+      // Use the same IP as Student/Teacher logins
+      const API_URL = "http://192.168.1.16:8080/api/admin";
+      const res = await fetch(`${API_URL}/signup`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
       });
 
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.admin));
-      localStorage.setItem("role", "admin");
-      navigate("/admin");
-    } catch (error) {
-      setError(
-        error.response?.data?.error || "Signup failed. Please try again.",
-      );
-      console.error("Signup failed:", error);
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("Admin account created successfully! Please login.");
+        navigate("/admin-login");
+      } else {
+        setError(
+          data.message ||
+            "Failed to create account. Email or Admin ID might already exist.",
+        );
+      }
+    } catch (err) {
+      console.error("Signup error:", err);
+      setError("Failed to connect to the server. Is the Java backend running?");
     } finally {
       setLoading(false);
     }
@@ -67,8 +77,8 @@ const AdminSignup = () => {
     <div className="login-container">
       <form className="login-card" onSubmit={handleSignup}>
         <div className="login-header">
-          <h2 className="login-title">Admin Registration 🛠️</h2>
-          <p className="login-subtitle">Create admin account</p>
+          <h2 className="login-title">Admin Registration 🛡️</h2>
+          <p className="login-subtitle">Create your admin account</p>
         </div>
 
         {error && (
@@ -90,22 +100,8 @@ const AdminSignup = () => {
             type="text"
             name="name"
             className="login-input"
-            placeholder="Admin Name"
+            placeholder="Jane Doe"
             value={formData.name}
-            onChange={handleChange}
-            required
-            disabled={loading}
-          />
-        </div>
-
-        <div className="input-group">
-          <label>Email Address</label>
-          <input
-            type="email"
-            name="email"
-            className="login-input"
-            placeholder="admin@example.com"
-            value={formData.email}
             onChange={handleChange}
             required
             disabled={loading}
@@ -118,11 +114,27 @@ const AdminSignup = () => {
             type="text"
             name="adminId"
             className="login-input"
-            placeholder="ADMIN001"
+            placeholder="ADM123"
             value={formData.adminId}
             onChange={handleChange}
             required
             disabled={loading}
+          />
+        </div>
+
+        <div className="input-group">
+          <label>Official Email ID (Auto-generated)</label>
+          <input
+            type="email"
+            name="email"
+            className="login-input"
+            placeholder="Auto-generated"
+            value={formData.email}
+            readOnly
+            style={{
+              backgroundColor: "rgba(15, 17, 21, 0.4)",
+              cursor: "not-allowed",
+            }}
           />
         </div>
 
@@ -132,7 +144,7 @@ const AdminSignup = () => {
             type="password"
             name="password"
             className="login-input"
-            placeholder="At least 6 characters"
+            placeholder="Enter password"
             value={formData.password}
             onChange={handleChange}
             required
@@ -140,22 +152,8 @@ const AdminSignup = () => {
           />
         </div>
 
-        <div className="input-group">
-          <label>Confirm Password</label>
-          <input
-            type="password"
-            name="confirmPassword"
-            className="login-input"
-            placeholder="Re-enter password"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            required
-            disabled={loading}
-          />
-        </div>
-
         <button type="submit" className="login-btn-submit" disabled={loading}>
-          {loading ? "Creating Account..." : "Create Account"}
+          {loading ? "Registering..." : "Create Account"}
         </button>
 
         <div style={{ textAlign: "center", marginTop: "15px" }}>

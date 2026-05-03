@@ -19,7 +19,7 @@ const StartLogin = () => {
       {/* Buttons */}
       <div className="buttons">
         {/* Student Section */}
-        <div style={{ marginBottom: "20px" }}>
+        <div>
           <button
             className="login-btn"
             onClick={() => navigate("/student-login")}
@@ -29,7 +29,7 @@ const StartLogin = () => {
         </div>
 
         {/* Teacher Section */}
-        <div style={{ marginBottom: "20px" }}>
+        <div>
           <button
             className="login-btn"
             onClick={() => navigate("/teacher-login")}

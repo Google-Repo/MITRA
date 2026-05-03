@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MITRA Database Diagrams</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+      mermaid.initialize({ startOnLoad: true, theme: "default" });
+    </script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 40px;
+        background-color: #f4f4f9;
+      }
+      .diagram-container {
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 40px;
+        text-align: center;
+      }
+      h2 {
+        color: #333;
+        text-align: left;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 10px;
+      }
+      p {
+        text-align: left;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>MITRA Project Diagrams</h1>
+    <p>
+      <strong>Tip:</strong> Right-click on any of the diagrams below and select
+      "Save image as..." (or use a snipping tool) to save them as PNGs for your
+      documentation.
+    </p>
+
+    <div class="diagram-container">
+      <h2>1. Entity-Relationship (ER) Diagram</h2>
+      <div class="mermaid">
+        erDiagram STUDENTS { INT id PK "AUTO_INCREMENT" VARCHAR(255) name
+        VARCHAR(255) email "UNIQUE" VARCHAR(255) password VARCHAR(50) roll_no
+        "UNIQUE" VARCHAR(100) course TIMESTAMP created_at TIMESTAMP updated_at }
+        TEACHERS { INT id PK "AUTO_INCREMENT" VARCHAR(255) name VARCHAR(255)
+        email "UNIQUE" VARCHAR(255) password VARCHAR(50) employee_id "UNIQUE"
+        VARCHAR(100) department VARCHAR(100) subject TIMESTAMP created_at
+        TIMESTAMP updated_at } ADMINS { INT id PK "AUTO_INCREMENT" VARCHAR(255)
+        name VARCHAR(255) email "UNIQUE" VARCHAR(255) password VARCHAR(50)
+        admin_id "UNIQUE" TIMESTAMP created_at TIMESTAMP updated_at }
+      </div>
+    </div>
+
+    <div class="diagram-container">
+      <h2>2. Data Flow Diagram (DFD) - Level 0 Context</h2>
+      <div class="mermaid">
+        graph TD Student[Student] Teacher[Teacher] Admin[Admin] Mitra[MITRA API
+        Backend<br />Java Servlets] DB[(MySQL Database)] Student -- Signup/Login
+        Details --> Mitra Student -- Profile Update Requests --> Mitra Mitra --
+        JWT Token & Profile Data --> Student Teacher -- Signup/Login Details -->
+        Mitra Teacher -- Profile Update Requests --> Mitra Mitra -- JWT Token &
+        Profile Data --> Teacher Admin -- Login/Management Actions --> Mitra
+        Mitra -- JWT Token & Admin Responses --> Admin Mitra -- Execute SQL
+        Queries<br />CRUD Operations --> DB DB -- Return Result Sets --> Mitra
+      </div>
+    </div>
+  </body>
+</html>

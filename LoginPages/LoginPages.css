@@ -1,31 +1,50 @@
 /* LoginPages.css */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
 .login-container {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #1e2025 0%, #111216 100%);
-  font-family: 'Inter', sans-serif;
-  color: #fff;
+  /* Yellow, White, and Light Blueish mesh gradient background */
+  background: radial-gradient(circle at 15% 50%, rgba(253, 224, 71, 0.6), transparent 50%), /* Pale Yellow */
+              radial-gradient(circle at 85% 30%, rgba(125, 211, 252, 0.7), transparent 50%), /* Light Blueish */
+              radial-gradient(circle at 50% 80%, rgba(255, 255, 255, 1), transparent 50%); /* White */
+  background-color: #f8fafc;
+  /* Apple System Fonts */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #1e293b;
   padding: 20px;
 }
 
 .login-card {
-  background: rgba(40, 44, 52, 0.6);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 24px;
-  padding: 48px;
+  position: relative;
+  /* macOS light mode window vibrancy */
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(30px) saturate(150%);
+  -webkit-backdrop-filter: blur(30px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-top: 1px solid #ffffff;
+  border-radius: 12px;
+  padding: 45px 40px 35px 40px;
   width: 100%;
   max-width: 420px;
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.03);
   display: flex;
   flex-direction: column;
   gap: 24px;
   animation: fadeIn 0.6s ease-out forwards;
+}
+
+/* macOS Traffic Light Window Buttons */
+.login-card::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ff5f56;
+  box-shadow: 20px 0 0 #ffbd2e, 40px 0 0 #27c93f;
 }
 
 @keyframes fadeIn {
@@ -46,16 +65,15 @@
 
 .login-title {
   font-size: 28px;
-  font-weight: 700;
+  font-weight: 600;
+  letter-spacing: -0.5px;
   margin: 0 0 8px 0;
-  background: linear-gradient(to right, #ffffff, #a5b4fc);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #0f172a;
 }
 
 .login-subtitle {
   font-size: 14px;
-  color: #9ca3af;
+  color: #64748b;
   margin: 0;
 }
 
@@ -68,65 +86,74 @@
 
 .input-group label {
   font-size: 13px;
-  font-weight: 500;
-  color: #d1d5db;
-  margin-left: 4px;
+  font-weight: 600;
+  color: #475569;
+  margin-left: 2px;
 }
 
 .login-input {
-  background: rgba(15, 17, 21, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 14px 16px;
-  color: #fff;
-  font-size: 15px;
+  /* macOS text field style */
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  padding: 10px 12px;
+  color: #0f172a;
+  font-size: 14px;
   transition: all 0.2s ease;
   outline: none;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03);
 }
 
 .login-input::placeholder {
-  color: #6b7280;
+  color: #94a3b8;
 }
 
 .login-input:focus {
-  border-color: #6366f1;
-  background: rgba(15, 17, 21, 0.8);
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+  /* Apple Focus Ring */
+  border-color: #38bdf8;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3), inset 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+/* Override inline styles for auto-generated read-only inputs */
+.login-input[readonly] {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+  color: #64748b !important;
+  box-shadow: none;
 }
 
 .login-btn-submit {
-  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  /* macOS Primary Button */
+  background: #0ea5e9; /* Light blueish / Sky blue */
   color: white;
-  border: none;
-  border-radius: 12px;
-  padding: 16px;
-  font-size: 16px;
-  font-weight: 600;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-top: 8px;
-  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
 }
 
 .login-btn-submit:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 24px rgba(99, 102, 241, 0.4);
+  background: #0284c7;
 }
 
 .login-btn-submit:active {
-  transform: translateY(0);
+  background: #0369a1;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .back-link {
   text-align: center;
   margin-top: 16px;
   font-size: 14px;
-  color: #9ca3af;
+  color: #64748b;
   text-decoration: none;
   transition: color 0.2s;
   cursor: pointer;
 }
 
 .back-link:hover {
-  color: #fff;
+  color: #0f172a;
 }

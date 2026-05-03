@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "../src/StudentDashboard.css";
 
 const Student = () => {
@@ -7,6 +8,8 @@ const Student = () => {
   const [activeSection, setActiveSection] = useState("academic");
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [studentData, setStudentData] = useState(null);
+  const [attendanceSummary, setAttendanceSummary] = useState([]);
+  const [attendanceHistory, setAttendanceHistory] = useState([]);
 
   useEffect(() => {
     const user = localStorage.getItem("user");
@@ -20,6 +23,28 @@ const Student = () => {
       navigate("/student-login");
     }
   }, [navigate]);
+
+  useEffect(() => {
+    if (studentData && studentData.id) {
+      const fetchAttendance = async () => {
+        try {
+          const API_BASE_URL = "http://localhost:8080/api";
+          const res = await axios.get(
+            `${API_BASE_URL}/student/attendance?studentId=${studentData.id}`,
+          );
+          if (res.data.summary) {
+            setAttendanceSummary(res.data.summary);
+            setAttendanceHistory(res.data.history);
+          } else {
+            setAttendanceSummary(res.data); // Fallback
+          }
+        } catch (error) {
+          console.error("Error fetching attendance:", error);
+        }
+      };
+      fetchAttendance();
+    }
+  }, [studentData]);
 
   const handleLogout = () => {
     localStorage.removeItem("role");
@@ -258,266 +283,365 @@ const Student = () => {
     </div>
   );
 
-  const renderAcademic = () => (
-    <div className="section-content">
-      <div className="section-hero academic-hero">
-        <div className="section-hero-icon">🎓</div>
-        <div>
-          <h2 className="section-hero-title">Academic Section</h2>
-          <p className="section-hero-sub">
-            Your timetable, marks, exams and attendance at a glance
-          </p>
-        </div>
-      </div>
+  const renderAcademic = () => {
+    // Overall attendance calculate karna
+    const avgAttendance =
+      attendanceSummary.length > 0
+        ? (
+            attendanceSummary.reduce((sum, item) => sum + item.percentage, 0) /
+            attendanceSummary.length
+          ).toFixed(1)
+        : "0.0";
 
-      {/* Stats Row */}
-      <div className="academic-stats-row">
-        {[
-          { label: "Attendance", value: "83.7%", color: "#10b981", icon: "✅" },
-          {
-            label: "Internal Marks",
-            value: "78 / 100",
-            color: "#6366f1",
-            icon: "📊",
-          },
-          {
-            label: "Backlog Subjects",
-            value: "0",
-            color: "#22c55e",
-            icon: "📗",
-          },
-          {
-            label: "Assignments Due",
-            value: "3",
-            color: "#f59e0b",
-            icon: "📌",
-          },
-        ].map((s, i) => (
-          <div
-            className="acad-stat-card"
-            key={i}
-            style={{ borderTop: `4px solid ${s.color}` }}
-          >
-            <span className="acad-stat-icon">{s.icon}</span>
-            <p className="acad-stat-value" style={{ color: s.color }}>
-              {s.value}
+    return (
+      <div className="section-content">
+        <div className="section-hero academic-hero">
+          <div className="section-hero-icon">🎓</div>
+          <div>
+            <h2 className="section-hero-title">Academic Section</h2>
+            <p className="section-hero-sub">
+              Your timetable, marks, exams and attendance at a glance
             </p>
-            <p className="acad-stat-label">{s.label}</p>
           </div>
-        ))}
-      </div>
+        </div>
 
-      <div className="academic-grid">
-        {/* Time Table */}
-        <div className="academic-card">
-          <div className="academic-card-header">
-            <span>🗓️ Time Table</span>
-            <span className="badge blue">Sem 4</span>
-          </div>
-          <table className="acad-table">
-            <thead>
-              <tr>
-                <th>Day</th>
-                <th>Subject</th>
-                <th>Time</th>
-                <th>Room</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                ["Monday", "Data Structures", "9:00–10:30", "A-101"],
-                ["Tuesday", "Operating Systems", "10:30–12:00", "B-202"],
-                ["Wednesday", "DBMS", "9:00–10:30", "A-105"],
-                ["Thursday", "CN Networks", "11:00–12:30", "C-301"],
-                ["Friday", "Software Eng.", "9:00–10:30", "A-101"],
-              ].map(([d, s, t, r], i) => (
-                <tr key={i}>
-                  <td>{d}</td>
-                  <td>{s}</td>
-                  <td>{t}</td>
-                  <td>{r}</td>
+        {/* Stats Row */}
+        <div className="academic-stats-row">
+          {[
+            {
+              label: "Attendance (Out of 21)",
+              value: `${avgAttendance}%`,
+              color: "#10b981",
+              icon: "✅",
+            },
+            {
+              label: "Internal Marks",
+              value: "78 / 100",
+              color: "#6366f1",
+              icon: "📊",
+            },
+            {
+              label: "Backlog Subjects",
+              value: "0",
+              color: "#22c55e",
+              icon: "📗",
+            },
+            {
+              label: "Assignments Due",
+              value: "3",
+              color: "#f59e0b",
+              icon: "📌",
+            },
+          ].map((s, i) => (
+            <div
+              className="acad-stat-card"
+              key={i}
+              style={{ borderTop: `4px solid ${s.color}` }}
+            >
+              <span className="acad-stat-icon">{s.icon}</span>
+              <p className="acad-stat-value" style={{ color: s.color }}>
+                {s.value}
+              </p>
+              <p className="acad-stat-label">{s.label}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="academic-grid">
+          {/* Time Table */}
+          <div className="academic-card">
+            <div className="academic-card-header">
+              <span>🗓️ Time Table</span>
+              <span className="badge blue">Sem 4</span>
+            </div>
+            <table className="acad-table">
+              <thead>
+                <tr>
+                  <th>Day</th>
+                  <th>Subject</th>
+                  <th>Time</th>
+                  <th>Room</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {[
+                  ["Monday", "Data Structures", "9:00–10:30", "A-101"],
+                  ["Tuesday", "Operating Systems", "10:30–12:00", "B-202"],
+                  ["Wednesday", "DBMS", "9:00–10:30", "A-105"],
+                  ["Thursday", "CN Networks", "11:00–12:30", "C-301"],
+                  ["Friday", "Software Eng.", "9:00–10:30", "A-101"],
+                ].map(([d, s, t, r], i) => (
+                  <tr key={i}>
+                    <td>{d}</td>
+                    <td>{s}</td>
+                    <td>{t}</td>
+                    <td>{r}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
-        {/* Internal Assessment Marks */}
-        <div className="academic-card">
-          <div className="academic-card-header">
-            <span>📊 Internal Assessment Marks</span>
-            <span className="badge purple">Sem 4</span>
-          </div>
-          <div className="marks-list">
-            {[
-              ["Data Structures", 82, 100],
-              ["Operating Systems", 75, 100],
-              ["DBMS", 90, 100],
-              ["CN Networks", 68, 100],
-              ["Software Eng.", 85, 100],
-            ].map(([sub, got, total], i) => (
-              <div className="marks-row" key={i}>
-                <span className="marks-sub">{sub}</span>
-                <div className="marks-bar-track">
-                  <div
-                    className="marks-bar-fill"
-                    style={{
-                      width: `${(got / total) * 100}%`,
-                      background: got >= 75 ? "#6366f1" : "#ef4444",
-                    }}
-                  ></div>
-                </div>
-                <span
-                  className="marks-score"
-                  style={{ color: got >= 75 ? "#10b981" : "#ef4444" }}
-                >
-                  {got}/{total}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Exam Result */}
-        <div className="academic-card">
-          <div className="academic-card-header">
-            <span>🏆 Exam Result</span>
-            <span className="badge green">Sem 3 Declared</span>
-          </div>
-          <table className="acad-table">
-            <thead>
-              <tr>
-                <th>Subject</th>
-                <th>Marks</th>
-                <th>Grade</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
+          {/* Internal Assessment Marks */}
+          <div className="academic-card">
+            <div className="academic-card-header">
+              <span>📊 Internal Assessment Marks</span>
+              <span className="badge purple">Sem 4</span>
+            </div>
+            <div className="marks-list">
               {[
-                ["Mathematics", 88, "A", "Pass"],
-                ["Physics", 74, "B", "Pass"],
-                ["Chemistry", 91, "A+", "Pass"],
-                ["English", 65, "C", "Pass"],
-                ["Comp. Science", 95, "O", "Pass"],
-              ].map(([sub, m, g, st], i) => (
-                <tr key={i}>
-                  <td>{sub}</td>
-                  <td>{m}</td>
-                  <td>
-                    <span className="grade-badge">{g}</span>
-                  </td>
-                  <td>
-                    <span className="status-pass">{st}</span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Backlog Subjects */}
-        <div className="academic-card">
-          <div className="academic-card-header">
-            <span>📗 Current Backlog Subjects</span>
-            <span className="badge green">All Clear</span>
-          </div>
-          <div className="empty-state">
-            <div className="empty-icon">🎉</div>
-            <p>No backlog subjects! You're on track.</p>
-          </div>
-        </div>
-
-        {/* Assignments */}
-        <div className="academic-card">
-          <div className="academic-card-header">
-            <span>📌 Assignments</span>
-            <span className="badge orange">3 Pending</span>
-          </div>
-          <div className="assignment-list">
-            {[
-              {
-                sub: "Data Structures",
-                title: "Binary Tree Implementation",
-                due: "Apr 30",
-                status: "Pending",
-              },
-              {
-                sub: "DBMS",
-                title: "ER Diagram for Library",
-                due: "May 2",
-                status: "Submitted",
-              },
-              {
-                sub: "Software Eng.",
-                title: "SRS Document Preparation",
-                due: "May 5",
-                status: "Pending",
-              },
-              {
-                sub: "CN Networks",
-                title: "Subnetting Exercises",
-                due: "May 8",
-                status: "Pending",
-              },
-            ].map((a, i) => (
-              <div className="assignment-row" key={i}>
-                <div className="assignment-info">
-                  <span className="assignment-sub">{a.sub}</span>
-                  <span className="assignment-title">{a.title}</span>
-                  <span className="assignment-due">📅 Due: {a.due}</span>
-                </div>
-                <span
-                  className={`assign-status ${a.status === "Submitted" ? "submitted" : "pending"}`}
-                >
-                  {a.status}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Attendance Status */}
-        <div className="academic-card">
-          <div className="academic-card-header">
-            <span>✅ Attendance Status</span>
-            <span className="badge blue">Sem 4</span>
-          </div>
-          <div className="attendance-list">
-            {[
-              ["Data Structures", 38, 45],
-              ["Operating Systems", 32, 40],
-              ["DBMS", 40, 42],
-              ["CN Networks", 28, 38],
-              ["Software Eng.", 35, 40],
-            ].map(([sub, att, total], i) => {
-              const pct = Math.round((att / total) * 100);
-              return (
-                <div className="att-row" key={i}>
-                  <span className="att-sub">{sub}</span>
-                  <div className="att-bar-track">
+                ["Data Structures", 82, 100],
+                ["Operating Systems", 75, 100],
+                ["DBMS", 90, 100],
+                ["CN Networks", 68, 100],
+                ["Software Eng.", 85, 100],
+              ].map(([sub, got, total], i) => (
+                <div className="marks-row" key={i}>
+                  <span className="marks-sub">{sub}</span>
+                  <div className="marks-bar-track">
                     <div
-                      className="att-bar-fill"
+                      className="marks-bar-fill"
                       style={{
-                        width: `${pct}%`,
-                        background: pct >= 75 ? "#10b981" : "#ef4444",
+                        width: `${(got / total) * 100}%`,
+                        background: got >= 75 ? "#6366f1" : "#ef4444",
                       }}
                     ></div>
                   </div>
                   <span
-                    className="att-pct"
-                    style={{ color: pct >= 75 ? "#10b981" : "#ef4444" }}
+                    className="marks-score"
+                    style={{ color: got >= 75 ? "#10b981" : "#ef4444" }}
                   >
-                    {pct}%
+                    {got}/{total}
                   </span>
                 </div>
-              );
-            })}
+              ))}
+            </div>
+          </div>
+
+          {/* Exam Result */}
+          <div className="academic-card">
+            <div className="academic-card-header">
+              <span>🏆 Exam Result</span>
+              <span className="badge green">Sem 3 Declared</span>
+            </div>
+            <table className="acad-table">
+              <thead>
+                <tr>
+                  <th>Subject</th>
+                  <th>Marks</th>
+                  <th>Grade</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ["Mathematics", 88, "A", "Pass"],
+                  ["Physics", 74, "B", "Pass"],
+                  ["Chemistry", 91, "A+", "Pass"],
+                  ["English", 65, "C", "Pass"],
+                  ["Comp. Science", 95, "O", "Pass"],
+                ].map(([sub, m, g, st], i) => (
+                  <tr key={i}>
+                    <td>{sub}</td>
+                    <td>{m}</td>
+                    <td>
+                      <span className="grade-badge">{g}</span>
+                    </td>
+                    <td>
+                      <span className="status-pass">{st}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Backlog Subjects */}
+          <div className="academic-card">
+            <div className="academic-card-header">
+              <span>📗 Current Backlog Subjects</span>
+              <span className="badge green">All Clear</span>
+            </div>
+            <div className="empty-state">
+              <div className="empty-icon">🎉</div>
+              <p>No backlog subjects! You're on track.</p>
+            </div>
+          </div>
+
+          {/* Assignments */}
+          <div className="academic-card">
+            <div className="academic-card-header">
+              <span>📌 Assignments</span>
+              <span className="badge orange">3 Pending</span>
+            </div>
+            <div className="assignment-list">
+              {[
+                {
+                  sub: "Data Structures",
+                  title: "Binary Tree Implementation",
+                  due: "Apr 30",
+                  status: "Pending",
+                },
+                {
+                  sub: "DBMS",
+                  title: "ER Diagram for Library",
+                  due: "May 2",
+                  status: "Submitted",
+                },
+                {
+                  sub: "Software Eng.",
+                  title: "SRS Document Preparation",
+                  due: "May 5",
+                  status: "Pending",
+                },
+                {
+                  sub: "CN Networks",
+                  title: "Subnetting Exercises",
+                  due: "May 8",
+                  status: "Pending",
+                },
+              ].map((a, i) => (
+                <div className="assignment-row" key={i}>
+                  <div className="assignment-info">
+                    <span className="assignment-sub">{a.sub}</span>
+                    <span className="assignment-title">{a.title}</span>
+                    <span className="assignment-due">📅 Due: {a.due}</span>
+                  </div>
+                  <span
+                    className={`assign-status ${a.status === "Submitted" ? "submitted" : "pending"}`}
+                  >
+                    {a.status}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Attendance Calendar */}
+          <div className="academic-card">
+            <div
+              className="academic-card-header"
+              style={{ marginBottom: "15px" }}
+            >
+              <span>📅 My Attendance Calendar</span>
+              <div
+                style={{ display: "flex", gap: "10px", alignItems: "center" }}
+              >
+                <span
+                  className="badge purple"
+                  style={{ fontSize: "14px", padding: "6px 12px" }}
+                >
+                  Total Classes: 21
+                </span>
+                <span
+                  className="badge blue"
+                  style={{ fontSize: "14px", padding: "6px 12px" }}
+                >
+                  Overall: {avgAttendance}%
+                </span>
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                gap: "15px",
+                marginBottom: "20px",
+                fontSize: "13px",
+                fontWeight: "600",
+              }}
+            >
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "6px" }}
+              >
+                <span
+                  style={{
+                    display: "inline-block",
+                    width: "12px",
+                    height: "12px",
+                    borderRadius: "50%",
+                    background: "#10b981",
+                  }}
+                ></span>{" "}
+                Present
+              </div>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "6px" }}
+              >
+                <span
+                  style={{
+                    display: "inline-block",
+                    width: "12px",
+                    height: "12px",
+                    borderRadius: "50%",
+                    background: "#ef4444",
+                  }}
+                ></span>{" "}
+                Absent
+              </div>
+            </div>
+
+            <div className="calendar-grid">
+              {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
+                <div key={d} className="cal-day-header">
+                  {d}
+                </div>
+              ))}
+
+              {(() => {
+                const currentDate = new Date();
+                const year = currentDate.getFullYear();
+                const month = currentDate.getMonth();
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+                const firstDay = new Date(year, month, 1).getDay();
+
+                const cells = [];
+                for (let i = 0; i < firstDay; i++) {
+                  cells.push(
+                    <div key={`empty-${i}`} className="cal-cell empty"></div>,
+                  );
+                }
+                for (let day = 1; day <= daysInMonth; day++) {
+                  const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+
+                  const currentDayOfWeek = new Date(year, month, day).getDay();
+                  const dayRecords = (attendanceHistory || []).filter(
+                    (r) => r.date && r.date.startsWith(dateStr),
+                  );
+                  let status = "";
+                  let titleText = "No Classes";
+
+                  if (currentDayOfWeek === 0) {
+                    status = "off-day";
+                    titleText = "Sunday - Off Day";
+                  } else if (dayRecords.length > 0) {
+                    const allPresent = dayRecords.every(
+                      (r) => r.status === "Present",
+                    );
+                    status = allPresent ? "present" : "absent";
+                    titleText = dayRecords
+                      .map((r) => `${r.subject}: ${r.status}`)
+                      .join("\n");
+                  }
+
+                  cells.push(
+                    <div
+                      key={day}
+                      className={`cal-cell ${status}`}
+                      title={titleText}
+                    >
+                      {day}
+                    </div>,
+                  );
+                }
+                return cells;
+              })()}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   const renderHostel = () => (
     <div className="section-content">

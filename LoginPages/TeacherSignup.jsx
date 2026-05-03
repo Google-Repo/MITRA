@@ -13,19 +13,43 @@ const TeacherSignup = () => {
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData((prev) => {
+      const newData = { ...prev, [e.target.name]: e.target.value };
+
+      // Auto-generate official email ID based on Name and Employee ID
+      if (e.target.name === "name" || e.target.name === "employeeId") {
+        const firstName = newData.name
+          ? newData.name
+              .split(" ")[0]
+              .toLowerCase()
+              .replace(/[^a-z0-9]/g, "")
+          : "teacher";
+        const id = newData.employeeId
+          ? newData.employeeId.toLowerCase().replace(/[^a-z0-9]/g, "")
+          : "";
+        if (firstName && id) {
+          newData.email = `${firstName}.${id}@mitra.edu`;
+        } else {
+          newData.email = "";
+        }
+      }
+      return newData;
+    });
   };
 
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:8080/api/teacher/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        "http://192.168.1.16:8080/api/teacher/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
         },
-        body: JSON.stringify(formData),
-      });
+      );
 
       const data = await response.json();
 
@@ -94,11 +118,14 @@ const TeacherSignup = () => {
           <input
             type="email"
             name="email"
-            placeholder="Email"
+            placeholder="Official Email (Auto-generated)"
             value={formData.email}
-            onChange={handleChange}
-            required
-            style={inputStyle}
+            readOnly
+            style={{
+              ...inputStyle,
+              backgroundColor: "#e9ecef",
+              cursor: "not-allowed",
+            }}
           />
           <input
             type="password"

@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Student from "../pages/Student";
 import Teacher from "../pages/Teacher";
-import Admin from "../pages/Admin";
+import Admin from "../LoginPages/Admin";
 import Login from "../Components/StartLogin";
 import ProtectedRoute from "../Components/ProtectedRoute";
 import StudentLogin from "../LoginPages/StudentLogin";

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./LoginPages.css";
 import axios from "axios";
 
-const API_URL = "http://localhost:8080/api/teacher";
+const API_URL = "http://192.168.1.16:8080/api/teacher";
 
 const TeacherLogin = () => {
   const [isSignup, setIsSignup] = useState(false);
@@ -22,10 +22,29 @@ const TeacherLogin = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => {
+      const newData = { ...prev, [name]: value };
+
+      // Auto-generate official email ID based on Name and Employee ID for Signup
+      if (isSignup && (name === "name" || name === "employeeId")) {
+        const firstName = newData.name
+          ? newData.name
+              .split(" ")[0]
+              .toLowerCase()
+              .replace(/[^a-z0-9]/g, "")
+          : "teacher";
+        const id = newData.employeeId
+          ? newData.employeeId.toLowerCase().replace(/[^a-z0-9]/g, "")
+          : "";
+        if (firstName && id) {
+          newData.email = `${firstName}.${id}@mitra.edu`;
+        } else {
+          newData.email = "";
+        }
+      }
+
+      return newData;
+    });
   };
 
   const handleLogin = async (e) => {
@@ -197,16 +216,18 @@ const TeacherLogin = () => {
             </div>
 
             <div className="input-group">
-              <label>Email Address</label>
+              <label>Official Email ID (Auto-generated)</label>
               <input
                 type="email"
                 name="email"
                 className="login-input"
-                placeholder="teacher@mitra.edu"
+                placeholder="Auto-generated"
                 value={formData.email}
-                onChange={handleChange}
-                required
-                disabled={loading}
+                readOnly
+                style={{
+                  backgroundColor: "rgba(15, 17, 21, 0.4)",
+                  cursor: "not-allowed",
+                }}
               />
             </div>
 

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./LoginPages.css";
 import axios from "axios";
 
-const API_URL = "http://localhost:8080/api/student";
+const API_URL = "http://192.168.1.16:8080/api/student";
 
 const StudentLogin = () => {
   const [isSignup, setIsSignup] = useState(false);
@@ -21,10 +21,29 @@ const StudentLogin = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => {
+      const newData = { ...prev, [name]: value };
+
+      // Auto-generate official email ID based on Name and Roll No for Signup
+      if (isSignup && (name === "name" || name === "rollNo")) {
+        const firstName = newData.name
+          ? newData.name
+              .split(" ")[0]
+              .toLowerCase()
+              .replace(/[^a-z0-9]/g, "")
+          : "student";
+        const id = newData.rollNo
+          ? newData.rollNo.toLowerCase().replace(/[^a-z0-9]/g, "")
+          : "";
+        if (firstName && id) {
+          newData.email = `${firstName}.${id}@mitra.edu`;
+        } else {
+          newData.email = "";
+        }
+      }
+
+      return newData;
+    });
   };
 
   const handleLogin = async (e) => {
@@ -193,16 +212,18 @@ const StudentLogin = () => {
             </div>
 
             <div className="input-group">
-              <label>Email Address</label>
+              <label>Official Email ID (Auto-generated)</label>
               <input
                 type="email"
                 name="email"
                 className="login-input"
-                placeholder="john@example.com"
+                placeholder="Auto-generated"
                 value={formData.email}
-                onChange={handleChange}
-                required
-                disabled={loading}
+                readOnly
+                style={{
+                  backgroundColor: "rgba(15, 17, 21, 0.4)",
+                  cursor: "not-allowed",
+                }}
               />
             </div>
 
