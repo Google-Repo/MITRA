@@ -529,6 +529,42 @@ const Student = () => {
             </div>
           </div>
 
+          {/* Subject-wise Attendance */}
+          <div className="academic-card">
+            <div className="academic-card-header">
+              <span>📊 Subject-wise Attendance</span>
+              <span className="badge blue">Overall: {avgAttendance}%</span>
+            </div>
+            <div className="marks-list" style={{ marginTop: "15px" }}>
+              {attendanceSummary && attendanceSummary.length > 0 ? (
+                attendanceSummary.map((item, idx) => (
+                  <div className="marks-row" key={idx}>
+                    <span className="marks-sub">{item.subject}</span>
+                    <div className="marks-bar-track">
+                      <div
+                        className="marks-bar-fill"
+                        style={{
+                          width: `${item.percentage || 0}%`,
+                          background: item.percentage >= 75 ? "#10b981" : item.percentage >= 50 ? "#f59e0b" : "#ef4444",
+                        }}
+                      ></div>
+                    </div>
+                    <span
+                      className="marks-score"
+                      style={{ color: item.percentage >= 75 ? "#10b981" : item.percentage >= 50 ? "#f59e0b" : "#ef4444" }}
+                    >
+                      {item.percentage}% {item.total_classes !== undefined ? `(${item.present_classes || 0}/${item.total_classes})` : ""}
+                    </span>
+                  </div>
+                ))
+              ) : (
+                <div className="empty-state" style={{ padding: "20px 0" }}>
+                  <p>No Classes Recorded</p>
+                </div>
+              )}
+            </div>
+          </div>
+
           {/* Attendance Calendar */}
           <div className="academic-card">
             <div
