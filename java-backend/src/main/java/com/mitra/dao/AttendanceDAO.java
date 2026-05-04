@@ -80,13 +80,11 @@ public class AttendanceDAO {
                 row.put("subject", rs.getString("subject"));
                 int total = rs.getInt("total_classes");
                 int present = rs.getInt("present_classes");
-                int absent = total - present;
                 
-                // Formula: +1 for Present, -1.5 for Absent, out of 21 total classes
-                double score = present - (absent * 1.5);
-                if (score < 0) score = 0.0; // Prevent negative percentage
-                double percentage = Math.min((score / 21.0) * 100.0, 100.0);
+                double percentage = total > 0 ? ((double) present / total) * 100.0 : 0.0;
                 
+                row.put("total_classes", total);
+                row.put("present_classes", present);
                 row.put("percentage", Math.round(percentage * 10.0) / 10.0); // round to 1 decimal place
                 summary.add(row);
             }

@@ -159,7 +159,7 @@ const StudentSignup = () => {
             disabled={loading}
           >
             <option value="">Select a course</option>
-            <option value="Computer Science">Computer Science</option>
+            <option value="Computer Application">Computer Application</option>
             <option value="Electrical Engineering">
               Electrical Engineering
             </option>

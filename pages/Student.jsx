@@ -25,18 +25,19 @@ const Student = () => {
   }, [navigate]);
 
   useEffect(() => {
-    if (studentData && studentData.id) {
+    const studentId = studentData?.id || studentData?._id;
+    if (studentId) {
       const fetchAttendance = async () => {
         try {
-          const API_BASE_URL = "http://localhost:8080/api";
+          const API_BASE_URL = "http://192.168.1.16:8080/api";
           const res = await axios.get(
-            `${API_BASE_URL}/student/attendance?studentId=${studentData.id}`,
+            `${API_BASE_URL}/student/attendance?studentId=${studentId}`,
           );
           if (res.data.summary) {
-            setAttendanceSummary(res.data.summary);
+            setAttendanceSummary(Array.isArray(res.data.summary) ? res.data.summary : []);
             setAttendanceHistory(res.data.history);
           } else {
-            setAttendanceSummary(res.data); // Fallback
+            setAttendanceSummary(Array.isArray(res.data) ? res.data : []); // Fallback
           }
         } catch (error) {
           console.error("Error fetching attendance:", error);
@@ -285,13 +286,24 @@ const Student = () => {
 
   const renderAcademic = () => {
     // Overall attendance calculate karna
-    const avgAttendance =
-      attendanceSummary.length > 0
-        ? (
-            attendanceSummary.reduce((sum, item) => sum + item.percentage, 0) /
-            attendanceSummary.length
-          ).toFixed(1)
-        : "0.0";
+    let totalClasses = 0;
+    let totalPresent = 0;
+    let fallbackPercentageSum = 0;
+
+    if (attendanceSummary && attendanceSummary.length > 0) {
+      attendanceSummary.forEach((item) => {
+        totalClasses += Number(item.total_classes) || 0;
+        totalPresent += Number(item.present_classes) || 0;
+        fallbackPercentageSum += parseFloat(item.percentage) || 0;
+      });
+    }
+    
+    let avgAttendance = "0.0";
+    if (totalClasses > 0) {
+      avgAttendance = ((totalPresent / totalClasses) * 100).toFixed(1);
+    } else if (attendanceSummary && attendanceSummary.length > 0) {
+      avgAttendance = (fallbackPercentageSum / attendanceSummary.length).toFixed(1);
+    }
 
     return (
       <div className="section-content">
@@ -309,7 +321,7 @@ const Student = () => {
         <div className="academic-stats-row">
           {[
             {
-              label: "Attendance (Out of 21)",
+              label: "Overall Attendance",
               value: `${avgAttendance}%`,
               color: "#10b981",
               icon: "✅",
@@ -521,18 +533,30 @@ const Student = () => {
           <div className="academic-card">
             <div
               className="academic-card-header"
-              style={{ marginBottom: "15px" }}
+              style={{ marginBottom: "15px", flexWrap: "wrap", gap: "10px" }}
             >
               <span>📅 My Attendance Calendar</span>
               <div
-                style={{ display: "flex", gap: "10px", alignItems: "center" }}
+                style={{ display: "flex", gap: "10px", alignItems: "center", flexWrap: "wrap" }}
               >
-                <span
-                  className="badge purple"
-                  style={{ fontSize: "14px", padding: "6px 12px" }}
-                >
-                  Total Classes: 21
-                </span>
+                {attendanceSummary && attendanceSummary.length > 0 ? (
+                  attendanceSummary.map((item, idx) => (
+                    <span
+                      key={idx}
+                      className="badge purple"
+                      style={{ fontSize: "13px", padding: "5px 10px" }}
+                    >
+                      {item.subject}: {item.percentage}% {item.total_classes !== undefined ? `(${item.present_classes || 0}/${item.total_classes})` : ""}
+                    </span>
+                  ))
+                ) : (
+                  <span
+                    className="badge purple"
+                    style={{ fontSize: "14px", padding: "6px 12px" }}
+                  >
+                    No Classes Recorded
+                  </span>
+                )}
                 <span
                   className="badge blue"
                   style={{ fontSize: "14px", padding: "6px 12px" }}

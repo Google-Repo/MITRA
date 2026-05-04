@@ -1,33 +1,33 @@
-F:\Mitra\MITRA\java-backend\src\main\java\com\mitra\servlet\TeacherLoginServlet.java
-F:\Mitra\MITRA\java-backend\src\main\java\com\mitra\servlet\AdminDeleteServlet.java
-F:\Mitra\MITRA\java-backend\src\main\java\com\mitra\servlet\AttendanceUploadServlet.java
-F:\Mitra\MITRA\java-backend\src\main\java\com\mitra\servlet\AdminLoginServlet.java
-F:\Mitra\MITRA\java-backend\src\main\java\com\mitra\dao\TeacherDAO.java
-F:\Mitra\MITRA\java-backend\src\main\java\com\mitra\util\PasswordUtil.java
-F:\Mitra\MITRA\java-backend\src\main\java\com\mitra\util\JsonUtil.java
-F:\Mitra\MITRA\java-backend\src\main\java\com\mitra\servlet\AdminGetByIdServlet.java
-F:\Mitra\MITRA\java-backend\src\main\java\com\mitra\servlet\StudentGetByIdServlet.java
-F:\Mitra\MITRA\java-backend\src\main\java\com\mitra\servlet\StudentGetAllServlet.java
-F:\Mitra\MITRA\java-backend\src\main\java\com\mitra\servlet\StudentUpdateServlet.java
-F:\Mitra\MITRA\java-backend\src\main\java\com\mitra\util\DBConnection.java
-F:\Mitra\MITRA\java-backend\src\main\java\com\mitra\servlet\TeacherSignupServlet.java
-F:\Mitra\MITRA\java-backend\src\main\java\com\mitra\model\Teacher.java
-F:\Mitra\MITRA\java-backend\src\main\java\com\mitra\servlet\AdminSignupServlet.java
-F:\Mitra\MITRA\java-backend\src\main\java\com\mitra\model\Admin.java
-F:\Mitra\MITRA\java-backend\src\main\java\com\mitra\servlet\TeacherDeleteServlet.java
-F:\Mitra\MITRA\java-backend\src\main\java\com\mitra\servlet\StudentLoginServlet.java
-F:\Mitra\MITRA\java-backend\src\main\java\com\mitra\servlet\AdminUpdateServlet.java
-F:\Mitra\MITRA\java-backend\src\main\java\com\mitra\servlet\AdminGetAllServlet.java
-F:\Mitra\MITRA\java-backend\src\main\java\com\mitra\dao\StudentDAO.java
-F:\Mitra\MITRA\java-backend\src\main\java\com\mitra\dao\AttendanceDAO.java
-F:\Mitra\MITRA\java-backend\src\main\java\com\mitra\dao\AdminDAO.java
-F:\Mitra\MITRA\java-backend\src\main\java\com\mitra\servlet\StudentSignupServlet.java
-F:\Mitra\MITRA\java-backend\src\main\java\com\mitra\servlet\AttendanceFetchServlet.java
-F:\Mitra\MITRA\java-backend\src\main\java\com\mitra\servlet\StudentAttendanceServlet.java
-F:\Mitra\MITRA\java-backend\src\main\java\com\mitra\model\Student.java
-F:\Mitra\MITRA\java-backend\src\main\java\com\mitra\servlet\TeacherGetByIdServlet.java
-F:\Mitra\MITRA\java-backend\src\main\java\com\mitra\servlet\TeacherGetAllServlet.java
-F:\Mitra\MITRA\java-backend\src\main\java\com\mitra\servlet\TeacherUpdateServlet.java
-F:\Mitra\MITRA\java-backend\src\main\java\com\mitra\servlet\StudentDeleteServlet.java
-F:\Mitra\MITRA\java-backend\src\main\java\com\mitra\util\JWTUtil.java
-F:\Mitra\MITRA\java-backend\src\main\java\com\mitra\util\CORSFilter.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\dao\TeacherDAO.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\util\JsonUtil.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\servlet\TeacherSignupServlet.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\servlet\AdminGetByIdServlet.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\servlet\AdminSignupServlet.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\util\JWTUtil.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\servlet\AdminGetAllServlet.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\servlet\AdminUpdateServlet.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\dao\AdminDAO.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\servlet\TeacherGetAllServlet.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\servlet\TeacherUpdateServlet.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\servlet\TeacherGetByIdServlet.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\servlet\StudentDeleteServlet.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\model\Admin.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\servlet\StudentLoginServlet.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\model\Teacher.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\util\CORSFilter.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\servlet\StudentAttendanceServlet.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\util\DBConnection.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\model\Student.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\servlet\AttendanceUploadServlet.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\util\PasswordUtil.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\dao\StudentDAO.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\servlet\AdminDeleteServlet.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\dao\AttendanceDAO.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\servlet\StudentGetAllServlet.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\servlet\StudentSignupServlet.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\servlet\StudentUpdateServlet.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\servlet\TeacherDeleteServlet.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\servlet\AdminLoginServlet.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\servlet\AttendanceFetchServlet.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\servlet\StudentGetByIdServlet.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\servlet\TeacherLoginServlet.java

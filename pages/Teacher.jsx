@@ -40,7 +40,7 @@ const Teacher = () => {
       const fetchStudents = async () => {
         setLoadingStudents(true);
         try {
-          const API_BASE_URL = "http://localhost:8080/api";
+          const API_BASE_URL = "http://192.168.1.16:8080/api";
           const res = await axios.get(`${API_BASE_URL}/student`);
           const data = Array.isArray(res.data)
             ? res.data
@@ -49,7 +49,7 @@ const Teacher = () => {
 
           // By default sabko "Present" mark kar dete hain
           const initialAtt = {};
-          data.forEach((s) => (initialAtt[s.id] = "Present"));
+          data.forEach((s) => (initialAtt[s.id || s._id] = "Present"));
           setAttendanceData(initialAtt);
         } catch (err) {
           console.error("Error fetching students:", err);
@@ -70,7 +70,7 @@ const Teacher = () => {
     ) {
       const fetchExistingAttendance = async () => {
         try {
-          const API_BASE_URL = "http://localhost:8080/api";
+          const API_BASE_URL = "http://192.168.1.16:8080/api";
           // Backend se specific date aur subject ki attendance manga rahe hain
           const res = await axios.get(`${API_BASE_URL}/attendance`, {
             params: { subject: teacherData.subject, date: attendanceDate },
@@ -82,13 +82,13 @@ const Teacher = () => {
           } else {
             // Nayi date hai ya koi data nahi hai, default "Present" set karo
             const initialAtt = {};
-            students.forEach((s) => (initialAtt[s.id] = "Present"));
+            students.forEach((s) => (initialAtt[s.id || s._id] = "Present"));
             setAttendanceData(initialAtt);
           }
         } catch (error) {
           // Agar backend endpoint ready nahi hai toh sabko default Present dikhao
           const initialAtt = {};
-          students.forEach((s) => (initialAtt[s.id] = "Present"));
+          students.forEach((s) => (initialAtt[s.id || s._id] = "Present"));
           setAttendanceData(initialAtt);
         }
       };
@@ -130,7 +130,10 @@ const Teacher = () => {
     console.log("Submitting Attendance Payload:", payload);
 
     try {
-      await axios.post("http://localhost:8080/api/attendance/upload", payload);
+      await axios.post(
+        "http://192.168.1.16:8080/api/attendance/upload",
+        payload,
+      );
       alert(`Attendance for ${teacherData.subject} saved successfully!`);
     } catch (error) {
       console.error("Error saving attendance:", error);
@@ -292,152 +295,158 @@ const Teacher = () => {
   const renderAttendance = () => {
     const isSunday = new Date(attendanceDate).getDay() === 0;
     return (
-    <div className="section-content">
-      <div className="section-hero general-hero">
-        <div className="section-hero-icon">✅</div>
-        <div>
-          <h2 className="section-hero-title">Mark Attendance</h2>
-          <div
-            className="section-hero-sub"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
-              marginTop: "8px",
-            }}
-          >
-            <span>Subject: {teacherData?.subject}</span>
-            <span>|</span>
-            <span>Select Date:</span>
-            <input
-              type="date"
-              value={attendanceDate}
-              onChange={(e) => setAttendanceDate(e.target.value)}
+      <div className="section-content">
+        <div className="section-hero general-hero">
+          <div className="section-hero-icon">✅</div>
+          <div>
+            <h2 className="section-hero-title">Mark Attendance</h2>
+            <div
+              className="section-hero-sub"
               style={{
-                padding: "6px 12px",
-                borderRadius: "8px",
-                border: "1px solid rgba(0,0,0,0.1)",
-                outline: "none",
-                background: "rgba(255,255,255,0.8)",
-                color: "var(--text-main)",
-                fontWeight: "600",
-                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+                marginTop: "8px",
               }}
-            />
+            >
+              <span>Subject: {teacherData?.subject}</span>
+              <span>|</span>
+              <span>Select Date:</span>
+              <input
+                type="date"
+                value={attendanceDate}
+                onChange={(e) => setAttendanceDate(e.target.value)}
+                style={{
+                  padding: "6px 12px",
+                  borderRadius: "8px",
+                  border: "1px solid rgba(0,0,0,0.1)",
+                  outline: "none",
+                  background: "rgba(255,255,255,0.8)",
+                  color: "var(--text-main)",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                }}
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="academic-card">
-        <div className="academic-card-header">
-          <span>👥 Student List</span>
-          <button
-            onClick={submitAttendance}
-            disabled={isSunday}
-            style={{
-              background: isSunday ? "#94a3b8" : "var(--primary-color)",
-              color: "white",
-              border: "none",
-              padding: "8px 16px",
-              borderRadius: "8px",
-              fontWeight: "600",
-              cursor: isSunday ? "not-allowed" : "pointer",
-            }}
-          >
-            Save Attendance
-          </button>
-        </div>
-
-        {isSunday ? (
-          <div style={{ padding: "40px 20px", textAlign: "center" }}>
-            <div style={{ fontSize: "48px", marginBottom: "10px" }}>🏖️</div>
-            <h3 style={{ margin: 0, color: "var(--text-main)" }}>Sunday is an Off-Day</h3>
-            <p style={{ marginTop: "8px", color: "var(--text-muted)" }}>Attendance cannot be marked on Sundays.</p>
+        <div className="academic-card">
+          <div className="academic-card-header">
+            <span>👥 Student List</span>
+            <button
+              onClick={submitAttendance}
+              disabled={isSunday}
+              style={{
+                background: isSunday ? "#94a3b8" : "var(--primary-color)",
+                color: "white",
+                border: "none",
+                padding: "8px 16px",
+                borderRadius: "8px",
+                fontWeight: "600",
+                cursor: isSunday ? "not-allowed" : "pointer",
+              }}
+            >
+              Save Attendance
+            </button>
           </div>
-        ) : loadingStudents ? (
-          <p
-            style={{
-              padding: "20px",
-              textAlign: "center",
-              color: "var(--text-muted)",
-            }}
-          >
-            Loading students...
-          </p>
-        ) : (
-          <table className="acad-table">
-            <thead>
-              <tr>
-                <th>Roll No</th>
-                <th>Name</th>
-                <th>Course</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {students.map((s) => (
-                <tr key={s.id}>
-                  <td>{s.roll_no || s.rollNo}</td>
-                  <td>{s.name}</td>
-                  <td>{s.course}</td>
-                  <td>
-                    <div style={{ display: "flex", gap: "8px" }}>
-                      <button
-                        onClick={() => handleAttendanceChange(s.id, "Present")}
-                        style={{
-                          background:
-                            attendanceData[s.id] === "Present"
-                              ? "#10b981"
-                              : "rgba(0,0,0,0.05)",
-                          color:
-                            attendanceData[s.id] === "Present"
-                              ? "white"
-                              : "var(--text-muted)",
-                          border: "none",
-                          padding: "6px 12px",
-                          borderRadius: "6px",
-                          cursor: "pointer",
-                          fontWeight: "bold",
-                        }}
-                      >
-                        P
-                      </button>
-                      <button
-                        onClick={() => handleAttendanceChange(s.id, "Absent")}
-                        style={{
-                          background:
-                            attendanceData[s.id] === "Absent"
-                              ? "#ef4444"
-                              : "rgba(0,0,0,0.05)",
-                          color:
-                            attendanceData[s.id] === "Absent"
-                              ? "white"
-                              : "var(--text-muted)",
-                          border: "none",
-                          padding: "6px 12px",
-                          borderRadius: "6px",
-                          cursor: "pointer",
-                          fontWeight: "bold",
-                        }}
-                      >
-                        A
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-              {students.length === 0 && (
+
+          {isSunday ? (
+            <div style={{ padding: "40px 20px", textAlign: "center" }}>
+              <div style={{ fontSize: "48px", marginBottom: "10px" }}>🏖️</div>
+              <h3 style={{ margin: 0, color: "var(--text-main)" }}>
+                Sunday is an Off-Day
+              </h3>
+              <p style={{ marginTop: "8px", color: "var(--text-muted)" }}>
+                Attendance cannot be marked on Sundays.
+              </p>
+            </div>
+          ) : loadingStudents ? (
+            <p
+              style={{
+                padding: "20px",
+                textAlign: "center",
+                color: "var(--text-muted)",
+              }}
+            >
+              Loading students...
+            </p>
+          ) : (
+            <table className="acad-table">
+              <thead>
                 <tr>
-                  <td colSpan="4" style={{ textAlign: "center" }}>
-                    No students found.
-                  </td>
+                  <th>Roll No</th>
+                  <th>Name</th>
+                  <th>Course</th>
+                  <th>Status</th>
                 </tr>
-              )}
-            </tbody>
-          </table>
-        )}
+              </thead>
+              <tbody>
+                {students.map((s) => (
+                  <tr key={s.id}>
+                    <td>{s.roll_no || s.rollNo}</td>
+                    <td>{s.name}</td>
+                    <td>{s.course}</td>
+                    <td>
+                      <div style={{ display: "flex", gap: "8px" }}>
+                        <button
+                          onClick={() =>
+                            handleAttendanceChange(s.id, "Present")
+                          }
+                          style={{
+                            background:
+                              attendanceData[s.id] === "Present"
+                                ? "#10b981"
+                                : "rgba(0,0,0,0.05)",
+                            color:
+                              attendanceData[s.id] === "Present"
+                                ? "white"
+                                : "var(--text-muted)",
+                            border: "none",
+                            padding: "6px 12px",
+                            borderRadius: "6px",
+                            cursor: "pointer",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          P
+                        </button>
+                        <button
+                          onClick={() => handleAttendanceChange(s.id, "Absent")}
+                          style={{
+                            background:
+                              attendanceData[s.id] === "Absent"
+                                ? "#ef4444"
+                                : "rgba(0,0,0,0.05)",
+                            color:
+                              attendanceData[s.id] === "Absent"
+                                ? "white"
+                                : "var(--text-muted)",
+                            border: "none",
+                            padding: "6px 12px",
+                            borderRadius: "6px",
+                            cursor: "pointer",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          A
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+                {students.length === 0 && (
+                  <tr>
+                    <td colSpan="4" style={{ textAlign: "center" }}>
+                      No students found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          )}
+        </div>
       </div>
-    </div>
     );
   };
 

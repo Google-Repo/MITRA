@@ -4,13 +4,13 @@ com\mitra\servlet\AttendanceUploadServlet$1.class
 com\mitra\dao\AdminDAO.class
 com\mitra\servlet\TeacherUpdateServlet.class
 com\mitra\util\JsonUtil.class
-com\mitra\servlet\StudentDeleteServlet.class
 com\mitra\servlet\StudentGetAllServlet.class
+com\mitra\servlet\StudentDeleteServlet.class
 com\mitra\model\Admin.class
 com\mitra\dao\TeacherDAO.class
+com\mitra\servlet\TeacherLoginServlet.class
 com\mitra\servlet\AdminDeleteServlet.class
 com\mitra\servlet\AdminGetAllServlet.class
-com\mitra\servlet\TeacherLoginServlet.class
 com\mitra\util\JWTUtil.class
 com\mitra\util\DBConnection.class
 com\mitra\servlet\TeacherGetByIdServlet.class
