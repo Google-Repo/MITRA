@@ -6,6 +6,8 @@ F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\servlet\AdminSignupS
 F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\util\JWTUtil.java
 F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\servlet\AdminGetAllServlet.java
 F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\servlet\AdminUpdateServlet.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\dao\TimetableDAO.java
+F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\servlet\TimetableServlet.java
 F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\dao\AdminDAO.java
 F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\servlet\TeacherGetAllServlet.java
 F:\Minor project\MITRA\java-backend\src\main\java\com\mitra\servlet\TeacherUpdateServlet.java

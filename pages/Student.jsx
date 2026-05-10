@@ -10,6 +10,7 @@ const Student = () => {
   const [studentData, setStudentData] = useState(null);
   const [attendanceSummary, setAttendanceSummary] = useState([]);
   const [attendanceHistory, setAttendanceHistory] = useState([]);
+  const [timetableData, setTimetableData] = useState([]);
 
   useEffect(() => {
     const user = localStorage.getItem("user");
@@ -34,7 +35,9 @@ const Student = () => {
             `${API_BASE_URL}/student/attendance?studentId=${studentId}`,
           );
           if (res.data.summary) {
-            setAttendanceSummary(Array.isArray(res.data.summary) ? res.data.summary : []);
+            setAttendanceSummary(
+              Array.isArray(res.data.summary) ? res.data.summary : [],
+            );
             setAttendanceHistory(res.data.history);
           } else {
             setAttendanceSummary(Array.isArray(res.data) ? res.data : []); // Fallback
@@ -44,6 +47,21 @@ const Student = () => {
         }
       };
       fetchAttendance();
+    }
+
+    if (studentData?.course) {
+      const fetchTimetable = async () => {
+        try {
+          const API_BASE_URL = "http://192.168.1.16:8080/api";
+          const res = await axios.get(`${API_BASE_URL}/timetable`, {
+            params: { course: studentData.course },
+          });
+          setTimetableData(Array.isArray(res.data) ? res.data : []);
+        } catch (error) {
+          console.error("Error fetching timetable:", error);
+        }
+      };
+      fetchTimetable();
     }
   }, [studentData]);
 
@@ -297,12 +315,14 @@ const Student = () => {
         fallbackPercentageSum += parseFloat(item.percentage) || 0;
       });
     }
-    
+
     let avgAttendance = "0.0";
     if (totalClasses > 0) {
       avgAttendance = ((totalPresent / totalClasses) * 100).toFixed(1);
     } else if (attendanceSummary && attendanceSummary.length > 0) {
-      avgAttendance = (fallbackPercentageSum / attendanceSummary.length).toFixed(1);
+      avgAttendance = (
+        fallbackPercentageSum / attendanceSummary.length
+      ).toFixed(1);
     }
 
     return (
@@ -364,7 +384,9 @@ const Student = () => {
           <div className="academic-card">
             <div className="academic-card-header">
               <span>🗓️ Time Table</span>
-              <span className="badge blue">Sem 4</span>
+              <span className="badge blue">
+                {studentData?.course || "Sem 4"}
+              </span>
             </div>
             <table className="acad-table">
               <thead>
@@ -373,23 +395,27 @@ const Student = () => {
                   <th>Subject</th>
                   <th>Time</th>
                   <th>Room</th>
+                  <th>Teacher</th>
                 </tr>
               </thead>
               <tbody>
-                {[
-                  ["Monday", "Data Structures", "9:00–10:30", "A-101"],
-                  ["Tuesday", "Operating Systems", "10:30–12:00", "B-202"],
-                  ["Wednesday", "DBMS", "9:00–10:30", "A-105"],
-                  ["Thursday", "CN Networks", "11:00–12:30", "C-301"],
-                  ["Friday", "Software Eng.", "9:00–10:30", "A-101"],
-                ].map(([d, s, t, r], i) => (
-                  <tr key={i}>
-                    <td>{d}</td>
-                    <td>{s}</td>
-                    <td>{t}</td>
-                    <td>{r}</td>
+                {timetableData.length > 0 ? (
+                  timetableData.map((t, i) => (
+                    <tr key={i}>
+                      <td>{t.day}</td>
+                      <td>{t.subject}</td>
+                      <td>{t.time}</td>
+                      <td>{t.room}</td>
+                      <td>{t.teacher}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5" style={{ textAlign: "center" }}>
+                      No timetable data found.
+                    </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
@@ -545,15 +571,30 @@ const Student = () => {
                         className="marks-bar-fill"
                         style={{
                           width: `${item.percentage || 0}%`,
-                          background: item.percentage >= 75 ? "#10b981" : item.percentage >= 50 ? "#f59e0b" : "#ef4444",
+                          background:
+                            item.percentage >= 75
+                              ? "#10b981"
+                              : item.percentage >= 50
+                                ? "#f59e0b"
+                                : "#ef4444",
                         }}
                       ></div>
                     </div>
                     <span
                       className="marks-score"
-                      style={{ color: item.percentage >= 75 ? "#10b981" : item.percentage >= 50 ? "#f59e0b" : "#ef4444" }}
+                      style={{
+                        color:
+                          item.percentage >= 75
+                            ? "#10b981"
+                            : item.percentage >= 50
+                              ? "#f59e0b"
+                              : "#ef4444",
+                      }}
                     >
-                      {item.percentage}% {item.total_classes !== undefined ? `(${item.present_classes || 0}/${item.total_classes})` : ""}
+                      {item.percentage}%{" "}
+                      {item.total_classes !== undefined
+                        ? `(${item.present_classes || 0}/${item.total_classes})`
+                        : ""}
                     </span>
                   </div>
                 ))
@@ -573,7 +614,12 @@ const Student = () => {
             >
               <span>📅 My Attendance Calendar</span>
               <div
-                style={{ display: "flex", gap: "10px", alignItems: "center", flexWrap: "wrap" }}
+                style={{
+                  display: "flex",
+                  gap: "10px",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                }}
               >
                 {attendanceSummary && attendanceSummary.length > 0 ? (
                   attendanceSummary.map((item, idx) => (
@@ -582,7 +628,10 @@ const Student = () => {
                       className="badge purple"
                       style={{ fontSize: "13px", padding: "5px 10px" }}
                     >
-                      {item.subject}: {item.percentage}% {item.total_classes !== undefined ? `(${item.present_classes || 0}/${item.total_classes})` : ""}
+                      {item.subject}: {item.percentage}%{" "}
+                      {item.total_classes !== undefined
+                        ? `(${item.present_classes || 0}/${item.total_classes})`
+                        : ""}
                     </span>
                   ))
                 ) : (

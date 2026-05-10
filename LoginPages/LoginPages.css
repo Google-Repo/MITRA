@@ -24,7 +24,7 @@
   border: 1px solid rgba(255, 255, 255, 0.8);
   border-top: 1px solid #ffffff;
   border-radius: 12px;
-  padding: 45px 40px 35px 40px;
+  padding: 40px;
   width: 100%;
   max-width: 420px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.03);
@@ -32,19 +32,6 @@
   flex-direction: column;
   gap: 24px;
   animation: fadeIn 0.6s ease-out forwards;
-}
-
-/* macOS Traffic Light Window Buttons */
-.login-card::before {
-  content: '';
-  position: absolute;
-  top: 14px;
-  left: 16px;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #ff5f56;
-  box-shadow: 20px 0 0 #ffbd2e, 40px 0 0 #27c93f;
 }
 
 @keyframes fadeIn {

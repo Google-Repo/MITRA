@@ -52,3 +52,17 @@ CREATE INDEX idx_admin_admin_id ON admins(admin_id);
 -- Optional: Insert sample data (comment out if not needed)
 -- INSERT INTO students (name, email, password, roll_no, course) 
 -- VALUES ('John Doe', 'john@example.com', 'hashedPassword', 'ROLL001', 'Computer Science');
+
+-- Timetable table
+CREATE TABLE IF NOT EXISTS timetable (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    course VARCHAR(100) NOT NULL,
+    semester VARCHAR(50) NOT NULL,
+    day_of_week VARCHAR(20) NOT NULL,
+    time_slot VARCHAR(50) NOT NULL,
+    subject VARCHAR(100) NOT NULL,
+    room VARCHAR(50) NOT NULL,
+    class_type VARCHAR(50) NOT NULL,
+    teacher_name VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

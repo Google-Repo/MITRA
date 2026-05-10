@@ -14,6 +14,15 @@ const Teacher = () => {
   const [attendanceDate, setAttendanceDate] = useState(
     new Date().toISOString().split("T")[0],
   );
+  const [timetableData, setTimetableData] = useState([]);
+  const [timetableForm, setTimetableForm] = useState({
+    course: "Computer Application",
+    semester: "Sem 4",
+    day: "Monday",
+    time: "",
+    room: "",
+    type: "Lecture",
+  });
 
   useEffect(() => {
     // Retrieve user data saved in local storage during login/signup
@@ -96,6 +105,26 @@ const Teacher = () => {
     }
   }, [attendanceDate, activeSection, students, teacherData]);
 
+  const fetchTimetable = async () => {
+    if (!teacherData?.name) return;
+    try {
+      const API_BASE_URL = "http://192.168.1.16:8080/api";
+      const res = await axios.get(`${API_BASE_URL}/timetable`, {
+        params: { teacherName: teacherData.name },
+      });
+      setTimetableData(Array.isArray(res.data) ? res.data : []);
+    } catch (error) {
+      console.error("Error fetching timetable:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (activeSection === "timetable" || activeSection === "dashboard") {
+      fetchTimetable();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeSection, teacherData]);
+
   const handleLogout = () => {
     localStorage.removeItem("role");
     localStorage.removeItem("token");
@@ -143,83 +172,118 @@ const Teacher = () => {
     }
   };
 
-  const renderDashboard = () => (
-    <div className="section-content">
-      <div className="section-hero academic-hero">
-        <div className="section-hero-icon">👨‍🏫</div>
-        <div>
-          <h2 className="section-hero-title">
-            Welcome, Prof. {teacherData?.name}!
-          </h2>
-          <p className="section-hero-sub">
-            {teacherData?.department} Department • ID: {teacherData?.employeeId}
-          </p>
-        </div>
-      </div>
+  const handleAddTimetable = async (e) => {
+    e.preventDefault();
+    try {
+      const payload = {
+        ...timetableForm,
+        subject: teacherData?.subject || "Unknown Subject",
+        teacherName: teacherData?.name || "Unknown Teacher",
+      };
+      await axios.post("http://192.168.1.16:8080/api/timetable", payload);
+      alert("Class schedule added successfully!");
+      // Fields ko reset karna aur table re-fetch karna
+      setTimetableForm({ ...timetableForm, time: "", room: "" });
+      fetchTimetable();
+    } catch (error) {
+      console.error("Error adding timetable:", error);
+      alert(
+        `Failed to add class schedule: ${error.response?.data?.error || error.message}`,
+      );
+    }
+  };
 
-      {/* Stats Row */}
-      <div className="academic-stats-row">
-        {[
-          { label: "Classes Today", value: "3", color: "#10b981", icon: "🏫" },
-          {
-            label: "Pending Grading",
-            value: "24",
-            color: "#6366f1",
-            icon: "📂",
-          },
-          {
-            label: "Avg Attendance",
-            value: "88%",
-            color: "#22c55e",
-            icon: "📈",
-          },
-          { label: "Meetings", value: "1", color: "#f59e0b", icon: "⏰" },
-        ].map((s, i) => (
-          <div
-            className="acad-stat-card"
-            key={i}
-            style={{ borderTop: `4px solid ${s.color}` }}
-          >
-            <span className="acad-stat-icon">{s.icon}</span>
-            <p className="acad-stat-value" style={{ color: s.color }}>
-              {s.value}
+  const renderDashboard = () => {
+    // Calculate today's classes dynamically
+    const todayStr = new Date().toLocaleDateString("en-US", {
+      weekday: "long",
+    });
+    const classesToday = timetableData.filter((t) => t.day === todayStr).length;
+
+    return (
+      <div className="section-content">
+        <div className="section-hero academic-hero">
+          <div className="section-hero-icon">👨‍🏫</div>
+          <div>
+            <h2 className="section-hero-title">
+              Welcome, Prof. {teacherData?.name}!
+            </h2>
+            <p className="section-hero-sub">
+              {teacherData?.department} Department • ID:{" "}
+              {teacherData?.employeeId}
             </p>
-            <p className="acad-stat-label">{s.label}</p>
           </div>
-        ))}
-      </div>
+        </div>
 
-      <div className="academic-grid" style={{ marginTop: "24px" }}>
-        <div className="academic-card">
-          <div className="academic-card-header">
-            <span>📚 My Subjects</span>
-            <span className="badge blue">Current Sem</span>
+        {/* Stats Row */}
+        <div className="academic-stats-row">
+          {[
+            {
+              label: "Classes Today",
+              value: classesToday.toString(),
+              color: "#10b981",
+              icon: "🏫",
+            },
+            {
+              label: "Pending Grading",
+              value: "24",
+              color: "#6366f1",
+              icon: "📂",
+            },
+            {
+              label: "Avg Attendance",
+              value: "88%",
+              color: "#22c55e",
+              icon: "📈",
+            },
+            { label: "Meetings", value: "1", color: "#f59e0b", icon: "⏰" },
+          ].map((s, i) => (
+            <div
+              className="acad-stat-card"
+              key={i}
+              style={{ borderTop: `4px solid ${s.color}` }}
+            >
+              <span className="acad-stat-icon">{s.icon}</span>
+              <p className="acad-stat-value" style={{ color: s.color }}>
+                {s.value}
+              </p>
+              <p className="acad-stat-label">{s.label}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="academic-grid" style={{ marginTop: "24px" }}>
+          <div className="academic-card">
+            <div className="academic-card-header">
+              <span>📚 My Subjects</span>
+              <span className="badge blue">Current Sem</span>
+            </div>
+            <table className="acad-table">
+              <thead>
+                <tr>
+                  <th>Subject</th>
+                  <th>Course</th>
+                  <th>Students</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{teacherData?.subject}</td>
+                  <td>Computer Science</td>
+                  <td>65</td>
+                </tr>
+                <tr>
+                  <td>Advanced {teacherData?.subject}</td>
+                  <td>Information Tech</td>
+                  <td>42</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-          <table className="acad-table">
-            <thead>
-              <tr>
-                <th>Subject</th>
-                <th>Course</th>
-                <th>Students</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{teacherData?.subject}</td>
-                <td>Computer Science</td>
-                <td>65</td>
-              </tr>
-              <tr>
-                <td>Advanced {teacherData?.subject}</td>
-                <td>Information Tech</td>
-                <td>42</td>
-              </tr>
-            </tbody>
-          </table>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   const renderTimetable = () => (
     <div className="section-content">
@@ -230,6 +294,127 @@ const Teacher = () => {
           <p className="section-hero-sub">Weekly lecture and lab schedule</p>
         </div>
       </div>
+
+      {/* Timetable Insertion Form */}
+      <div className="academic-card" style={{ marginBottom: "20px" }}>
+        <div className="academic-card-header">
+          <span>➕ Add Class Schedule</span>
+        </div>
+        <form
+          onSubmit={handleAddTimetable}
+          style={{
+            display: "flex",
+            gap: "10px",
+            flexWrap: "wrap",
+            padding: "15px",
+          }}
+        >
+          <select
+            value={timetableForm.course}
+            onChange={(e) =>
+              setTimetableForm({ ...timetableForm, course: e.target.value })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "5px",
+              border: "1px solid #ccc",
+            }}
+            required
+          >
+            <option value="Computer Application">Computer Application</option>
+            <option value="Electrical Engineering">
+              Electrical Engineering
+            </option>
+            <option value="Mechanical Engineering">
+              Mechanical Engineering
+            </option>
+            <option value="Civil Engineering">Civil Engineering</option>
+            <option value="Business Administration">
+              Business Administration
+            </option>
+          </select>
+          <select
+            value={timetableForm.day}
+            onChange={(e) =>
+              setTimetableForm({ ...timetableForm, day: e.target.value })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "5px",
+              border: "1px solid #ccc",
+            }}
+            required
+          >
+            <option value="Monday">Monday</option>
+            <option value="Tuesday">Tuesday</option>
+            <option value="Wednesday">Wednesday</option>
+            <option value="Thursday">Thursday</option>
+            <option value="Friday">Friday</option>
+            <option value="Saturday">Saturday</option>
+          </select>
+          <input
+            type="text"
+            placeholder="Time (e.g. 9:00-10:30)"
+            value={timetableForm.time}
+            onChange={(e) =>
+              setTimetableForm({ ...timetableForm, time: e.target.value })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "5px",
+              border: "1px solid #ccc",
+              flex: "1",
+            }}
+            required
+          />
+          <input
+            type="text"
+            placeholder="Room (e.g. A-101)"
+            value={timetableForm.room}
+            onChange={(e) =>
+              setTimetableForm({ ...timetableForm, room: e.target.value })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "5px",
+              border: "1px solid #ccc",
+              flex: "1",
+            }}
+            required
+          />
+          <select
+            value={timetableForm.type}
+            onChange={(e) =>
+              setTimetableForm({ ...timetableForm, type: e.target.value })
+            }
+            style={{
+              padding: "8px",
+              borderRadius: "5px",
+              border: "1px solid #ccc",
+            }}
+            required
+          >
+            <option value="Lecture">Lecture</option>
+            <option value="Practical">Practical</option>
+            <option value="Tutorial">Tutorial</option>
+          </select>
+          <button
+            type="submit"
+            style={{
+              padding: "8px 16px",
+              background: "var(--primary-color)",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+              fontWeight: "bold",
+            }}
+          >
+            Add Class
+          </button>
+        </form>
+      </div>
+
       <div className="academic-card">
         <div className="academic-card-header">
           <span>🗓️ Weekly Schedule</span>
@@ -238,6 +423,7 @@ const Teacher = () => {
         <table className="acad-table">
           <thead>
             <tr>
+              <th>Course</th>
               <th>Day</th>
               <th>Time</th>
               <th>Subject</th>
@@ -246,46 +432,26 @@ const Teacher = () => {
             </tr>
           </thead>
           <tbody>
-            {[
-              [
-                "Monday",
-                "9:00–10:30",
-                teacherData?.subject,
-                "A-101",
-                "Lecture",
-              ],
-              [
-                "Tuesday",
-                "11:00–12:30",
-                teacherData?.subject,
-                "Lab-3",
-                "Practical",
-              ],
-              [
-                "Wednesday",
-                "9:00–10:30",
-                teacherData?.subject,
-                "A-105",
-                "Lecture",
-              ],
-              [
-                "Thursday",
-                "14:00–15:30",
-                teacherData?.subject,
-                "B-201",
-                "Tutorial",
-              ],
-            ].map(([d, t, s, r, ty], i) => (
-              <tr key={i}>
-                <td>{d}</td>
-                <td>{t}</td>
-                <td>{s}</td>
-                <td>{r}</td>
-                <td>
-                  <span className="grade-badge">{ty}</span>
+            {timetableData.length > 0 ? (
+              timetableData.map((t, i) => (
+                <tr key={i}>
+                  <td>{t.course}</td>
+                  <td>{t.day}</td>
+                  <td>{t.time}</td>
+                  <td>{t.subject}</td>
+                  <td>{t.room}</td>
+                  <td>
+                    <span className="grade-badge">{t.type}</span>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="6" style={{ textAlign: "center" }}>
+                  No classes scheduled yet.
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
